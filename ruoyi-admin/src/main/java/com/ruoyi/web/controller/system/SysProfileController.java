@@ -1,15 +1,5 @@
 package com.ruoyi.web.controller.system;
 
-import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.UserConstants;
@@ -23,20 +13,25 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * 个人信息 业务处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
 @RequestMapping("/system/user/profile")
 public class SysProfileController extends BaseController
 {
-    @Autowired
-    private ISysUserService userService;
+    @Resource
+    private ISysUserService sysUserService;
 
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
     /**
@@ -48,8 +43,8 @@ public class SysProfileController extends BaseController
         LoginUser loginUser = getLoginUser();
         SysUser user = loginUser.getUser();
         AjaxResult ajax = AjaxResult.success(user);
-        ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
-        ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
+        ajax.put("roleGroup", sysUserService.selectUserRoleGroup(loginUser.getUsername()));
+        ajax.put("postGroup", sysUserService.selectUserPostGroup(loginUser.getUsername()));
         return ajax;
     }
 
@@ -64,18 +59,18 @@ public class SysProfileController extends BaseController
         SysUser sysUser = loginUser.getUser();
         user.setUserName(sysUser.getUserName());
         if (StringUtils.isNotEmpty(user.getPhonenumber())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
+                && UserConstants.NOT_UNIQUE.equals(sysUserService.checkPhoneUnique(user)))
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
         if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
+                && UserConstants.NOT_UNIQUE.equals(sysUserService.checkEmailUnique(user)))
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setUserId(sysUser.getUserId());
         user.setPassword(null);
-        if (userService.updateUserProfile(user) > 0)
+        if (sysUserService.updateUserProfile(user) > 0)
         {
             // 更新缓存用户信息
             sysUser.setNickName(user.getNickName());
@@ -106,7 +101,7 @@ public class SysProfileController extends BaseController
         {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
-        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0)
+        if (sysUserService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0)
         {
             // 更新缓存用户密码
             loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
@@ -127,7 +122,7 @@ public class SysProfileController extends BaseController
         {
             LoginUser loginUser = getLoginUser();
             String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-            if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
+            if (sysUserService.updateUserAvatar(loginUser.getUsername(), avatar))
             {
                 AjaxResult ajax = AjaxResult.success();
                 ajax.put("imgUrl", avatar);

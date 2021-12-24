@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+
 import com.ruoyi.common.config.RuoYiConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ import com.ruoyi.system.service.ISysConfigService;
 
 /**
  * 验证码操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -33,19 +33,20 @@ public class CaptchaController
     @Resource(name = "captchaProducerMath")
     private Producer captchaProducerMath;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
-    
-    @Autowired
-    private ISysConfigService configService;
+
+    @Resource
+    private ISysConfigService sysConfigService;
+
     /**
      * 生成验证码
      */
     @GetMapping("/captchaImage")
-    public AjaxResult getCode(HttpServletResponse response) throws IOException
+    public AjaxResult getCode()// 原参数：HttpServletResponse response
     {
         AjaxResult ajax = AjaxResult.success();
-        boolean captchaOnOff = configService.selectCaptchaOnOff();
+        boolean captchaOnOff = sysConfigService.selectCaptchaOnOff();
         ajax.put("captchaOnOff", captchaOnOff);
         if (!captchaOnOff)
         {
@@ -56,7 +57,7 @@ public class CaptchaController
         String uuid = IdUtils.simpleUUID();
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
 
-        String capStr = null, code = null;
+        String capStr, code = null;
         BufferedImage image = null;
 
         // 生成验证码
@@ -79,7 +80,10 @@ public class CaptchaController
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try
         {
-            ImageIO.write(image, "jpg", os);
+            if (image != null)
+            {
+                ImageIO.write(image, "jpg", os);
+            }
         }
         catch (IOException e)
         {

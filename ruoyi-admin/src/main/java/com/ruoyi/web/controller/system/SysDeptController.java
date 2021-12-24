@@ -1,19 +1,5 @@
 package com.ruoyi.web.controller.system;
 
-import java.util.Iterator;
-import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -22,6 +8,13 @@ import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysDeptService;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 部门信息
@@ -32,8 +25,8 @@ import com.ruoyi.system.service.ISysDeptService;
 @RequestMapping("/system/dept")
 public class SysDeptController extends BaseController
 {
-    @Autowired
-    private ISysDeptService deptService;
+    @Resource
+    private ISysDeptService iSysDeptService;
 
     /**
      * 获取部门列表
@@ -42,7 +35,7 @@ public class SysDeptController extends BaseController
     @GetMapping("/list")
     public AjaxResult list(SysDept dept)
     {
-        List<SysDept> depts = deptService.selectDeptList(dept);
+        List<SysDept> depts = iSysDeptService.selectDeptList(dept);
         return AjaxResult.success(depts);
     }
 
@@ -53,17 +46,9 @@ public class SysDeptController extends BaseController
     @GetMapping("/list/exclude/{deptId}")
     public AjaxResult excludeChild(@PathVariable(value = "deptId", required = false) Long deptId)
     {
-        List<SysDept> depts = deptService.selectDeptList(new SysDept());
-        Iterator<SysDept> it = depts.iterator();
-        while (it.hasNext())
-        {
-            SysDept d = (SysDept) it.next();
-            if (d.getDeptId().intValue() == deptId
-                    || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), deptId + ""))
-            {
-                it.remove();
-            }
-        }
+        List<SysDept> depts = iSysDeptService.selectDeptList(new SysDept());
+        depts.removeIf(d -> d.getDeptId().intValue() == deptId
+                || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), deptId + ""));
         return AjaxResult.success(depts);
     }
 
@@ -74,8 +59,8 @@ public class SysDeptController extends BaseController
     @GetMapping(value = "/{deptId}")
     public AjaxResult getInfo(@PathVariable Long deptId)
     {
-        deptService.checkDeptDataScope(deptId);
-        return AjaxResult.success(deptService.selectDeptById(deptId));
+        iSysDeptService.checkDeptDataScope(deptId);
+        return AjaxResult.success(iSysDeptService.selectDeptById(deptId));
     }
 
     /**
@@ -84,8 +69,8 @@ public class SysDeptController extends BaseController
     @GetMapping("/treeselect")
     public AjaxResult treeselect(SysDept dept)
     {
-        List<SysDept> depts = deptService.selectDeptList(dept);
-        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
+        List<SysDept> depts = iSysDeptService.selectDeptList(dept);
+        return AjaxResult.success(iSysDeptService.buildDeptTreeSelect(depts));
     }
 
     /**
@@ -94,10 +79,10 @@ public class SysDeptController extends BaseController
     @GetMapping(value = "/roleDeptTreeselect/{roleId}")
     public AjaxResult roleDeptTreeselect(@PathVariable("roleId") Long roleId)
     {
-        List<SysDept> depts = deptService.selectDeptList(new SysDept());
+        List<SysDept> depts = iSysDeptService.selectDeptList(new SysDept());
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("checkedKeys", deptService.selectDeptListByRoleId(roleId));
-        ajax.put("depts", deptService.buildDeptTreeSelect(depts));
+        ajax.put("checkedKeys", iSysDeptService.selectDeptListByRoleId(roleId));
+        ajax.put("depts", iSysDeptService.buildDeptTreeSelect(depts));
         return ajax;
     }
 
@@ -109,12 +94,12 @@ public class SysDeptController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDept dept)
     {
-        if (UserConstants.NOT_UNIQUE.equals(deptService.checkDeptNameUnique(dept)))
+        if (UserConstants.NOT_UNIQUE.equals(iSysDeptService.checkDeptNameUnique(dept)))
         {
             return AjaxResult.error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
         dept.setCreateBy(getUsername());
-        return toAjax(deptService.insertDept(dept));
+        return toAjax(iSysDeptService.insertDept(dept));
     }
 
     /**
@@ -125,7 +110,7 @@ public class SysDeptController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDept dept)
     {
-        if (UserConstants.NOT_UNIQUE.equals(deptService.checkDeptNameUnique(dept)))
+        if (UserConstants.NOT_UNIQUE.equals(iSysDeptService.checkDeptNameUnique(dept)))
         {
             return AjaxResult.error("修改部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
@@ -134,12 +119,12 @@ public class SysDeptController extends BaseController
             return AjaxResult.error("修改部门'" + dept.getDeptName() + "'失败，上级部门不能是自己");
         }
         else if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus())
-                && deptService.selectNormalChildrenDeptById(dept.getDeptId()) > 0)
+                && iSysDeptService.selectNormalChildrenDeptById(dept.getDeptId()) > 0)
         {
             return AjaxResult.error("该部门包含未停用的子部门！");
         }
         dept.setUpdateBy(getUsername());
-        return toAjax(deptService.updateDept(dept));
+        return toAjax(iSysDeptService.updateDept(dept));
     }
 
     /**
@@ -150,14 +135,14 @@ public class SysDeptController extends BaseController
     @DeleteMapping("/{deptId}")
     public AjaxResult remove(@PathVariable Long deptId)
     {
-        if (deptService.hasChildByDeptId(deptId))
+        if (iSysDeptService.hasChildByDeptId(deptId))
         {
             return AjaxResult.error("存在下级部门,不允许删除");
         }
-        if (deptService.checkDeptExistUser(deptId))
+        if (iSysDeptService.checkDeptExistUser(deptId))
         {
             return AjaxResult.error("部门存在用户,不允许删除");
         }
-        return toAjax(deptService.deleteDeptById(deptId));
+        return toAjax(iSysDeptService.deleteDeptById(deptId));
     }
 }

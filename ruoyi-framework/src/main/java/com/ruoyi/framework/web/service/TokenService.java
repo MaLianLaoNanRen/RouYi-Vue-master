@@ -1,12 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -19,6 +12,14 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * token验证处理
@@ -46,7 +47,7 @@ public class TokenService
 
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
     /**
@@ -66,10 +67,9 @@ public class TokenService
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                LoginUser user = redisCache.getCacheObject(userKey);
-                return user;
+                return redisCache.getCacheObject(userKey);
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {
             }
         }
@@ -119,9 +119,6 @@ public class TokenService
 
     /**
      * 验证令牌有效期，相差不足20分钟，自动刷新缓存
-     *
-     * @param loginUser
-     * @return 令牌
      */
     public void verifyToken(LoginUser loginUser)
     {
@@ -170,10 +167,9 @@ public class TokenService
      */
     private String createToken(Map<String, Object> claims)
     {
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
-        return token;
     }
 
     /**
@@ -204,9 +200,6 @@ public class TokenService
 
     /**
      * 获取请求token
-     *
-     * @param request
-     * @return token
      */
     private String getToken(HttpServletRequest request)
     {

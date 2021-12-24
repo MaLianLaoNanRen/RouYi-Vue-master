@@ -2,9 +2,10 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,21 +34,21 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 用户信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController
 {
-    @Autowired
-    private ISysUserService userService;
+    @Resource
+    private ISysUserService sysUserService;
 
-    @Autowired
-    private ISysRoleService roleService;
+    @Resource
+    private ISysRoleService sysRoleService;
 
-    @Autowired
-    private ISysPostService postService;
+    @Resource
+    private ISysPostService sysPostService;
 
     /**
      * 获取用户列表
@@ -57,7 +58,7 @@ public class SysUserController extends BaseController
     public TableDataInfo list(SysUser user)
     {
         startPage();
-        List<SysUser> list = userService.selectUserList(user);
+        List<SysUser> list = sysUserService.selectUserList(user);
         return getDataTable(list);
     }
 
@@ -66,8 +67,8 @@ public class SysUserController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUser user)
     {
-        List<SysUser> list = userService.selectUserList(user);
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        List<SysUser> list = sysUserService.selectUserList(user);
+        ExcelUtil<SysUser> util = new ExcelUtil<>(SysUser.class);
         util.exportExcel(response, list, "用户数据");
     }
 
@@ -76,17 +77,17 @@ public class SysUserController extends BaseController
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        ExcelUtil<SysUser> util = new ExcelUtil<>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
         String operName = getUsername();
-        String message = userService.importUser(userList, updateSupport, operName);
+        String message = sysUserService.importUser(userList, updateSupport, operName);
         return AjaxResult.success(message);
     }
 
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response)
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        ExcelUtil<SysUser> util = new ExcelUtil<>(SysUser.class);
         util.importTemplateExcel(response, "用户数据");
     }
 
@@ -94,19 +95,19 @@ public class SysUserController extends BaseController
      * 根据用户编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
-    @GetMapping(value = { "/", "/{userId}" })
+    @GetMapping(value = {"/", "/{userId}"})
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId)
     {
-        userService.checkUserDataScope(userId);
+        sysUserService.checkUserDataScope(userId);
         AjaxResult ajax = AjaxResult.success();
-        List<SysRole> roles = roleService.selectRoleAll();
+        List<SysRole> roles = sysRoleService.selectRoleAll();
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
-        ajax.put("posts", postService.selectPostAll());
+        ajax.put("posts", sysPostService.selectPostAll());
         if (StringUtils.isNotNull(userId))
         {
-            ajax.put(AjaxResult.DATA_TAG, userService.selectUserById(userId));
-            ajax.put("postIds", postService.selectPostListByUserId(userId));
-            ajax.put("roleIds", roleService.selectRoleListByUserId(userId));
+            ajax.put(AjaxResult.DATA_TAG, sysUserService.selectUserById(userId));
+            ajax.put("postIds", sysPostService.selectPostListByUserId(userId));
+            ajax.put("roleIds", sysRoleService.selectRoleListByUserId(userId));
         }
         return ajax;
     }
@@ -119,23 +120,23 @@ public class SysUserController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user)
     {
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName())))
+        if (UserConstants.NOT_UNIQUE.equals(sysUserService.checkUserNameUnique(user.getUserName())))
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
         }
         else if (StringUtils.isNotEmpty(user.getPhonenumber())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
+                && UserConstants.NOT_UNIQUE.equals(sysUserService.checkPhoneUnique(user)))
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
         else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
+                && UserConstants.NOT_UNIQUE.equals(sysUserService.checkEmailUnique(user)))
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setCreateBy(getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        return toAjax(userService.insertUser(user));
+        return toAjax(sysUserService.insertUser(user));
     }
 
     /**
@@ -146,19 +147,19 @@ public class SysUserController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysUser user)
     {
-        userService.checkUserAllowed(user);
+        sysUserService.checkUserAllowed(user);
         if (StringUtils.isNotEmpty(user.getPhonenumber())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
+                && UserConstants.NOT_UNIQUE.equals(sysUserService.checkPhoneUnique(user)))
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
         else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
+                && UserConstants.NOT_UNIQUE.equals(sysUserService.checkEmailUnique(user)))
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setUpdateBy(getUsername());
-        return toAjax(userService.updateUser(user));
+        return toAjax(sysUserService.updateUser(user));
     }
 
     /**
@@ -173,7 +174,7 @@ public class SysUserController extends BaseController
         {
             return error("当前用户不能删除");
         }
-        return toAjax(userService.deleteUserByIds(userIds));
+        return toAjax(sysUserService.deleteUserByIds(userIds));
     }
 
     /**
@@ -184,10 +185,10 @@ public class SysUserController extends BaseController
     @PutMapping("/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user)
     {
-        userService.checkUserAllowed(user);
+        sysUserService.checkUserAllowed(user);
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         user.setUpdateBy(getUsername());
-        return toAjax(userService.resetPwd(user));
+        return toAjax(sysUserService.resetPwd(user));
     }
 
     /**
@@ -198,9 +199,9 @@ public class SysUserController extends BaseController
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user)
     {
-        userService.checkUserAllowed(user);
+        sysUserService.checkUserAllowed(user);
         user.setUpdateBy(getUsername());
-        return toAjax(userService.updateUserStatus(user));
+        return toAjax(sysUserService.updateUserStatus(user));
     }
 
     /**
@@ -211,8 +212,8 @@ public class SysUserController extends BaseController
     public AjaxResult authRole(@PathVariable("userId") Long userId)
     {
         AjaxResult ajax = AjaxResult.success();
-        SysUser user = userService.selectUserById(userId);
-        List<SysRole> roles = roleService.selectRolesByUserId(userId);
+        SysUser user = sysUserService.selectUserById(userId);
+        List<SysRole> roles = sysRoleService.selectRolesByUserId(userId);
         ajax.put("user", user);
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         return ajax;
@@ -226,7 +227,7 @@ public class SysUserController extends BaseController
     @PutMapping("/authRole")
     public AjaxResult insertAuthRole(Long userId, Long[] roleIds)
     {
-        userService.insertUserAuth(userId, roleIds);
+        sysUserService.insertUserAuth(userId, roleIds);
         return success();
     }
 }

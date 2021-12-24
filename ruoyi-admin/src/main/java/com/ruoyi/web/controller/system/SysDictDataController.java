@@ -1,19 +1,5 @@
 package com.ruoyi.web.controller.system;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -24,6 +10,14 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysDictTypeService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数据字典信息
@@ -34,10 +28,10 @@ import com.ruoyi.system.service.ISysDictTypeService;
 @RequestMapping("/system/dict/data")
 public class SysDictDataController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysDictDataService dictDataService;
 
-    @Autowired
+    @Resource
     private ISysDictTypeService dictTypeService;
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
@@ -55,7 +49,7 @@ public class SysDictDataController extends BaseController
     public void export(HttpServletResponse response, SysDictData dictData)
     {
         List<SysDictData> list = dictDataService.selectDictDataList(dictData);
-        ExcelUtil<SysDictData> util = new ExcelUtil<SysDictData>(SysDictData.class);
+        ExcelUtil<SysDictData> util = new ExcelUtil<>(SysDictData.class);
         util.exportExcel(response, list, "字典数据");
     }
 
@@ -78,7 +72,7 @@ public class SysDictDataController extends BaseController
         List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);
         if (StringUtils.isNull(data))
         {
-            data = new ArrayList<SysDictData>();
+            data = new ArrayList<>();
         }
         return AjaxResult.success(data);
     }

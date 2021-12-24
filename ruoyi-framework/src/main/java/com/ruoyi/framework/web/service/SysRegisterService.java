@@ -1,7 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -16,22 +14,25 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 注册校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
 public class SysRegisterService
 {
-    @Autowired
-    private ISysUserService userService;
+    @Resource
+    private ISysUserService sysUserService;
 
-    @Autowired
-    private ISysConfigService configService;
+    @Resource
+    private ISysConfigService sysConfigService;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
     /**
@@ -41,11 +42,11 @@ public class SysRegisterService
     {
         String msg = "", username = registerBody.getUsername(), password = registerBody.getPassword();
 
-        boolean captchaOnOff = configService.selectCaptchaOnOff();
+        boolean captchaOnOff = sysConfigService.selectCaptchaOnOff();
         // 验证码开关
         if (captchaOnOff)
         {
-            validateCaptcha(username, registerBody.getCode(), registerBody.getUuid());
+            validateCaptcha(registerBody.getCode(), registerBody.getUuid());
         }
 
         if (StringUtils.isEmpty(username))
@@ -66,7 +67,7 @@ public class SysRegisterService
         {
             msg = "密码长度必须在5到20个字符之间";
         }
-        else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(username)))
+        else if (UserConstants.NOT_UNIQUE.equals(sysUserService.checkUserNameUnique(username)))
         {
             msg = "保存用户'" + username + "'失败，注册账号已存在";
         }
@@ -76,7 +77,7 @@ public class SysRegisterService
             sysUser.setUserName(username);
             sysUser.setNickName(username);
             sysUser.setPassword(SecurityUtils.encryptPassword(registerBody.getPassword()));
-            boolean regFlag = userService.registerUser(sysUser);
+            boolean regFlag = sysUserService.registerUser(sysUser);
             if (!regFlag)
             {
                 msg = "注册失败,请联系系统管理人员";
@@ -92,13 +93,11 @@ public class SysRegisterService
 
     /**
      * 校验验证码
-     * 
-     * @param username 用户名
+     *
      * @param code 验证码
      * @param uuid 唯一标识
-     * @return 结果
      */
-    public void validateCaptcha(String username, String code, String uuid)
+    public void validateCaptcha(String code, String uuid)
     {
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
         String captcha = redisCache.getCacheObject(verifyKey);

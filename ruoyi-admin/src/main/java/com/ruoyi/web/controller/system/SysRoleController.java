@@ -1,18 +1,5 @@
 package com.ruoyi.web.controller.system;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -29,6 +16,13 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 角色信息
@@ -39,24 +33,24 @@ import com.ruoyi.system.service.ISysUserService;
 @RequestMapping("/system/role")
 public class SysRoleController extends BaseController
 {
-    @Autowired
-    private ISysRoleService roleService;
+    @Resource
+    private ISysRoleService sysRoleService;
 
-    @Autowired
+    @Resource
     private TokenService tokenService;
     
-    @Autowired
-    private SysPermissionService permissionService;
+    @Resource
+    private SysPermissionService sysPermissionService;
     
-    @Autowired
-    private ISysUserService userService;
+    @Resource
+    private ISysUserService sysUserService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRole role)
     {
         startPage();
-        List<SysRole> list = roleService.selectRoleList(role);
+        List<SysRole> list = sysRoleService.selectRoleList(role);
         return getDataTable(list);
     }
 
@@ -65,8 +59,8 @@ public class SysRoleController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysRole role)
     {
-        List<SysRole> list = roleService.selectRoleList(role);
-        ExcelUtil<SysRole> util = new ExcelUtil<SysRole>(SysRole.class);
+        List<SysRole> list = sysRoleService.selectRoleList(role);
+        ExcelUtil<SysRole> util = new ExcelUtil<>(SysRole.class);
         util.exportExcel(response, list, "角色数据");
     }
 
@@ -77,8 +71,8 @@ public class SysRoleController extends BaseController
     @GetMapping(value = "/{roleId}")
     public AjaxResult getInfo(@PathVariable Long roleId)
     {
-        roleService.checkRoleDataScope(roleId);
-        return AjaxResult.success(roleService.selectRoleById(roleId));
+        sysRoleService.checkRoleDataScope(roleId);
+        return AjaxResult.success(sysRoleService.selectRoleById(roleId));
     }
 
     /**
@@ -89,16 +83,16 @@ public class SysRoleController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysRole role)
     {
-        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role)))
+        if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleNameUnique(role)))
         {
             return AjaxResult.error("新增角色'" + role.getRoleName() + "'失败，角色名称已存在");
         }
-        else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role)))
+        else if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleKeyUnique(role)))
         {
             return AjaxResult.error("新增角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setCreateBy(getUsername());
-        return toAjax(roleService.insertRole(role));
+        return toAjax(sysRoleService.insertRole(role));
 
     }
 
@@ -110,25 +104,25 @@ public class SysRoleController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysRole role)
     {
-        roleService.checkRoleAllowed(role);
-        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role)))
+        sysRoleService.checkRoleAllowed(role);
+        if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleNameUnique(role)))
         {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
         }
-        else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role)))
+        else if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleKeyUnique(role)))
         {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setUpdateBy(getUsername());
         
-        if (roleService.updateRole(role) > 0)
+        if (sysRoleService.updateRole(role) > 0)
         {
             // 更新缓存用户权限
             LoginUser loginUser = getLoginUser();
             if (StringUtils.isNotNull(loginUser.getUser()) && !loginUser.getUser().isAdmin())
             {
-                loginUser.setPermissions(permissionService.getMenuPermission(loginUser.getUser()));
-                loginUser.setUser(userService.selectUserByUserName(loginUser.getUser().getUserName()));
+                loginUser.setPermissions(sysPermissionService.getMenuPermission(loginUser.getUser()));
+                loginUser.setUser(sysUserService.selectUserByUserName(loginUser.getUser().getUserName()));
                 tokenService.setLoginUser(loginUser);
             }
             return AjaxResult.success();
@@ -144,8 +138,8 @@ public class SysRoleController extends BaseController
     @PutMapping("/dataScope")
     public AjaxResult dataScope(@RequestBody SysRole role)
     {
-        roleService.checkRoleAllowed(role);
-        return toAjax(roleService.authDataScope(role));
+        sysRoleService.checkRoleAllowed(role);
+        return toAjax(sysRoleService.authDataScope(role));
     }
 
     /**
@@ -156,9 +150,9 @@ public class SysRoleController extends BaseController
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysRole role)
     {
-        roleService.checkRoleAllowed(role);
+        sysRoleService.checkRoleAllowed(role);
         role.setUpdateBy(getUsername());
-        return toAjax(roleService.updateRoleStatus(role));
+        return toAjax(sysRoleService.updateRoleStatus(role));
     }
 
     /**
@@ -169,7 +163,7 @@ public class SysRoleController extends BaseController
     @DeleteMapping("/{roleIds}")
     public AjaxResult remove(@PathVariable Long[] roleIds)
     {
-        return toAjax(roleService.deleteRoleByIds(roleIds));
+        return toAjax(sysRoleService.deleteRoleByIds(roleIds));
     }
 
     /**
@@ -179,7 +173,7 @@ public class SysRoleController extends BaseController
     @GetMapping("/optionselect")
     public AjaxResult optionselect()
     {
-        return AjaxResult.success(roleService.selectRoleAll());
+        return AjaxResult.success(sysRoleService.selectRoleAll());
     }
 
     /**
@@ -190,7 +184,7 @@ public class SysRoleController extends BaseController
     public TableDataInfo allocatedList(SysUser user)
     {
         startPage();
-        List<SysUser> list = userService.selectAllocatedList(user);
+        List<SysUser> list = sysUserService.selectAllocatedList(user);
         return getDataTable(list);
     }
 
@@ -202,7 +196,7 @@ public class SysRoleController extends BaseController
     public TableDataInfo unallocatedList(SysUser user)
     {
         startPage();
-        List<SysUser> list = userService.selectUnallocatedList(user);
+        List<SysUser> list = sysUserService.selectUnallocatedList(user);
         return getDataTable(list);
     }
 
@@ -214,7 +208,7 @@ public class SysRoleController extends BaseController
     @PutMapping("/authUser/cancel")
     public AjaxResult cancelAuthUser(@RequestBody SysUserRole userRole)
     {
-        return toAjax(roleService.deleteAuthUser(userRole));
+        return toAjax(sysRoleService.deleteAuthUser(userRole));
     }
 
     /**
@@ -225,7 +219,7 @@ public class SysRoleController extends BaseController
     @PutMapping("/authUser/cancelAll")
     public AjaxResult cancelAuthUserAll(Long roleId, Long[] userIds)
     {
-        return toAjax(roleService.deleteAuthUsers(roleId, userIds));
+        return toAjax(sysRoleService.deleteAuthUsers(roleId, userIds));
     }
 
     /**
@@ -236,6 +230,6 @@ public class SysRoleController extends BaseController
     @PutMapping("/authUser/selectAll")
     public AjaxResult selectAuthUserAll(Long roleId, Long[] userIds)
     {
-        return toAjax(roleService.insertAuthUsers(roleId, userIds));
+        return toAjax(sysRoleService.insertAuthUsers(roleId, userIds));
     }
 }

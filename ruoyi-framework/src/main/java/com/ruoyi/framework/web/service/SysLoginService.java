@@ -1,12 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -23,49 +16,56 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 登录校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
 public class SysLoginService
 {
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
     @Resource
     private AuthenticationManager authenticationManager;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
-    
-    @Autowired
-    private ISysUserService userService;
 
-    @Autowired
-    private ISysConfigService configService;
+    @Resource
+    private ISysUserService sysUserService;
+
+    @Resource
+    private ISysConfigService sysConfigService;
 
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
-     * @param code 验证码
-     * @param uuid 唯一标识
+     * @param code     验证码
+     * @param uuid     唯一标识
      * @return 结果
      */
     public String login(String username, String password, String code, String uuid)
     {
-        boolean captchaOnOff = configService.selectCaptchaOnOff();
+        boolean captchaOnOff = sysConfigService.selectCaptchaOnOff();
         // 验证码开关
         if (captchaOnOff)
         {
             validateCaptcha(username, code, uuid);
         }
         // 用户验证
-        Authentication authentication = null;
+        Authentication authentication;
         try
         {
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
@@ -94,11 +94,10 @@ public class SysLoginService
 
     /**
      * 校验验证码
-     * 
+     *
      * @param username 用户名
-     * @param code 验证码
-     * @param uuid 唯一标识
-     * @return 结果
+     * @param code     验证码
+     * @param uuid     唯一标识
      */
     public void validateCaptcha(String username, String code, String uuid)
     {
@@ -128,6 +127,6 @@ public class SysLoginService
         sysUser.setUserId(userId);
         sysUser.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
         sysUser.setLoginDate(DateUtils.getNowDate());
-        userService.updateUserProfile(sysUser);
+        sysUserService.updateUserProfile(sysUser);
     }
 }

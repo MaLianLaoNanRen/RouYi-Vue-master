@@ -3,6 +3,7 @@ package com.ruoyi.common.core.controller;
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
@@ -23,7 +24,7 @@ import com.ruoyi.common.utils.sql.SqlUtil;
 
 /**
  * web层通用数据处理
- * 
+ *
  * @author ruoyi
  */
 public class BaseController
@@ -71,7 +72,7 @@ public class BaseController
     /**
      * 响应请求分页数据
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected TableDataInfo getDataTable(List<?> list)
     {
         TableDataInfo rspData = new TableDataInfo();
@@ -116,7 +117,7 @@ public class BaseController
 
     /**
      * 响应返回结果
-     * 
+     *
      * @param rows 影响行数
      * @return 操作结果
      */
@@ -127,7 +128,7 @@ public class BaseController
 
     /**
      * 响应返回结果
-     * 
+     *
      * @param result 结果
      * @return 操作结果
      */

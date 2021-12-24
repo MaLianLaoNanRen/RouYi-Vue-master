@@ -1,44 +1,46 @@
 package com.ruoyi.web.core.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import com.ruoyi.common.config.RuoYiConfig;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Swagger2的接口配置
- * 
+ *
  * @author ruoyi
  */
 @Configuration
 public class SwaggerConfig
 {
-    /** 系统基础配置 */
-    @Autowired
+    /**
+     * 系统基础配置
+     */
+    @Resource
     private RuoYiConfig ruoyiConfig;
 
-    /** 是否开启swagger */
+    /**
+     * 是否开启swagger
+     */
     @Value("${swagger.enabled}")
     private boolean enabled;
 
-    /** 设置请求的统一前缀 */
+    /**
+     * 设置请求的统一前缀
+     */
     @Value("${swagger.pathMapping}")
     private String pathMapping;
 
@@ -73,7 +75,7 @@ public class SwaggerConfig
      */
     private List<SecurityScheme> securitySchemes()
     {
-        List<SecurityScheme> apiKeyList = new ArrayList<SecurityScheme>();
+        List<SecurityScheme> apiKeyList = new ArrayList<>();
         apiKeyList.add(new ApiKey("Authorization", "Authorization", In.HEADER.toValue()));
         return apiKeyList;
     }
