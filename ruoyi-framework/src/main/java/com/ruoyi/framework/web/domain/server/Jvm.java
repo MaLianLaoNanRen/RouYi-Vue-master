@@ -1,14 +1,17 @@
 package com.ruoyi.framework.web.domain.server;
 
 import java.lang.management.ManagementFactory;
+
 import com.ruoyi.common.utils.Arith;
 import com.ruoyi.common.utils.DateUtils;
+import lombok.Data;
 
 /**
  * JVM相关信息
- * 
+ *
  * @author ruoyi
  */
+@Data
 public class Jvm
 {
     /**
@@ -41,29 +44,14 @@ public class Jvm
         return Arith.div(total, (1024 * 1024), 2);
     }
 
-    public void setTotal(double total)
-    {
-        this.total = total;
-    }
-
     public double getMax()
     {
         return Arith.div(max, (1024 * 1024), 2);
     }
 
-    public void setMax(double max)
-    {
-        this.max = max;
-    }
-
     public double getFree()
     {
         return Arith.div(free, (1024 * 1024), 2);
-    }
-
-    public void setFree(double free)
-    {
-        this.free = free;
     }
 
     public double getUsed()
@@ -87,21 +75,6 @@ public class Jvm
     public String getVersion()
     {
         return version;
-    }
-
-    public void setVersion(String version)
-    {
-        this.version = version;
-    }
-
-    public String getHome()
-    {
-        return home;
-    }
-
-    public void setHome(String home)
-    {
-        this.home = home;
     }
 
     /**

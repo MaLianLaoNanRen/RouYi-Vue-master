@@ -3,6 +3,7 @@ package com.ruoyi.generator.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
 import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.constant.GenConstants;
@@ -13,18 +14,24 @@ import com.ruoyi.generator.domain.GenTableColumn;
 
 /**
  * 模板处理工具类
- * 
+ *
  * @author ruoyi
  */
 public class VelocityUtils
 {
-    /** 项目空间路径 */
+    /**
+     * 项目空间路径
+     */
     private static final String PROJECT_PATH = "main/java";
 
-    /** mybatis空间路径 */
+    /**
+     * mybatis空间路径
+     */
     private static final String MYBATIS_PATH = "main/resources/mapper";
 
-    /** 默认上级菜单，系统工具 */
+    /**
+     * 默认上级菜单，系统工具
+     */
     private static final String DEFAULT_PARENT_MENU_ID = "3";
 
     /**
@@ -126,7 +133,7 @@ public class VelocityUtils
      */
     public static List<String> getTemplateList(String tplCategory)
     {
-        List<String> templates = new ArrayList<String>();
+        List<String> templates = new ArrayList<>();
         templates.add("vm/java/domain.java.vm");
         templates.add("vm/java/mapper.java.vm");
         templates.add("vm/java/service.java.vm");
@@ -227,13 +234,12 @@ public class VelocityUtils
     public static String getPackagePrefix(String packageName)
     {
         int lastIndex = packageName.lastIndexOf(".");
-        String basePackage = StringUtils.substring(packageName, 0, lastIndex);
-        return basePackage;
+        return StringUtils.substring(packageName, 0, lastIndex);
     }
 
     /**
      * 根据列类型获取导入包
-     * 
+     *
      * @param genTable 业务表对象
      * @return 返回需要导入的包列表
      */
@@ -241,19 +247,19 @@ public class VelocityUtils
     {
         List<GenTableColumn> columns = genTable.getColumns();
         GenTable subGenTable = genTable.getSubTable();
-        HashSet<String> importList = new HashSet<String>();
+        HashSet<String> importList = new HashSet<>();
         if (StringUtils.isNotNull(subGenTable))
         {
             importList.add("java.util.List");
         }
         for (GenTableColumn column : columns)
         {
-            if (!column.isSuperColumn() && GenConstants.TYPE_DATE.equals(column.getJavaType()))
+            if (column.isSuperColumn() && GenConstants.TYPE_DATE.equals(column.getJavaType()))
             {
                 importList.add("java.util.Date");
                 importList.add("com.fasterxml.jackson.annotation.JsonFormat");
             }
-            else if (!column.isSuperColumn() && GenConstants.TYPE_BIGDECIMAL.equals(column.getJavaType()))
+            else if (column.isSuperColumn() && GenConstants.TYPE_BIGDECIMAL.equals(column.getJavaType()))
             {
                 importList.add("java.math.BigDecimal");
             }
@@ -263,19 +269,19 @@ public class VelocityUtils
 
     /**
      * 根据列类型获取字典组
-     * 
+     *
      * @param genTable 业务表对象
      * @return 返回字典组
      */
     public static String getDicts(GenTable genTable)
     {
         List<GenTableColumn> columns = genTable.getColumns();
-        List<String> dicts = new ArrayList<String>();
+        List<String> dicts = new ArrayList<>();
         for (GenTableColumn column : columns)
         {
-            if (!column.isSuperColumn() && StringUtils.isNotEmpty(column.getDictType()) && StringUtils.equalsAny(
+            if (column.isSuperColumn() && StringUtils.isNotEmpty(column.getDictType()) && StringUtils.equalsAny(
                     column.getHtmlType(),
-                    new String[] { GenConstants.HTML_SELECT, GenConstants.HTML_RADIO, GenConstants.HTML_CHECKBOX }))
+                    new String[]{GenConstants.HTML_SELECT, GenConstants.HTML_RADIO, GenConstants.HTML_CHECKBOX}))
             {
                 dicts.add("'" + column.getDictType() + "'");
             }
@@ -286,7 +292,7 @@ public class VelocityUtils
     /**
      * 获取权限前缀
      *
-     * @param moduleName 模块名称
+     * @param moduleName   模块名称
      * @param businessName 业务名称
      * @return 返回权限前缀
      */
