@@ -2,6 +2,7 @@ package com.ruoyi.common.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -11,11 +12,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 防止XSS攻击的过滤器
- * 
+ *
  * @author ruoyi
  */
 public class XssFilter implements Filter
@@ -26,16 +28,13 @@ public class XssFilter implements Filter
     public List<String> excludes = new ArrayList<>();
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException
+    public void init(FilterConfig filterConfig)// throws ServletException
     {
         String tempExcludes = filterConfig.getInitParameter("excludes");
         if (StringUtils.isNotEmpty(tempExcludes))
         {
             String[] url = tempExcludes.split(",");
-            for (int i = 0; url != null && i < url.length; i++)
-            {
-                excludes.add(url[i]);
-            }
+            Collections.addAll(excludes, url);
         }
     }
 

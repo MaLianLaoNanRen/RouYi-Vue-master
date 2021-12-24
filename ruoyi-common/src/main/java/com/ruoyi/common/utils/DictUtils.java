@@ -41,8 +41,7 @@ public class DictUtils
         Object cacheObj = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
         if (StringUtils.isNotNull(cacheObj))
         {
-            List<SysDictData> dictDatas = StringUtils.cast(cacheObj);
-            return dictDatas;
+            return StringUtils.cast(cacheObj);
         }
         return null;
     }
@@ -86,25 +85,31 @@ public class DictUtils
 
         if (StringUtils.containsAny(separator, dictValue) && StringUtils.isNotEmpty(datas))
         {
-            for (SysDictData dict : datas)
+            if (datas != null)
             {
-                for (String value : dictValue.split(separator))
+                for (SysDictData dict : datas)
                 {
-                    if (value.equals(dict.getDictValue()))
+                    for (String value : dictValue.split(separator))
                     {
-                        propertyString.append(dict.getDictLabel() + separator);
-                        break;
+                        if (value.equals(dict.getDictValue()))
+                        {
+                            propertyString.append(dict.getDictLabel()).append(separator);
+                            break;
+                        }
                     }
                 }
             }
         }
         else
         {
-            for (SysDictData dict : datas)
+            if (datas != null)
             {
-                if (dictValue.equals(dict.getDictValue()))
+                for (SysDictData dict : datas)
                 {
-                    return dict.getDictLabel();
+                    if (dictValue.equals(dict.getDictValue()))
+                    {
+                        return dict.getDictLabel();
+                    }
                 }
             }
         }
@@ -126,25 +131,31 @@ public class DictUtils
 
         if (StringUtils.containsAny(separator, dictLabel) && StringUtils.isNotEmpty(datas))
         {
-            for (SysDictData dict : datas)
+            if (datas != null)
             {
-                for (String label : dictLabel.split(separator))
+                for (SysDictData dict : datas)
                 {
-                    if (label.equals(dict.getDictLabel()))
+                    for (String label : dictLabel.split(separator))
                     {
-                        propertyString.append(dict.getDictValue() + separator);
-                        break;
+                        if (label.equals(dict.getDictLabel()))
+                        {
+                            propertyString.append(dict.getDictValue()).append(separator);
+                            break;
+                        }
                     }
                 }
             }
         }
         else
         {
-            for (SysDictData dict : datas)
+            if (datas != null)
             {
-                if (dictLabel.equals(dict.getDictLabel()))
+                for (SysDictData dict : datas)
                 {
-                    return dict.getDictValue();
+                    if (dictLabel.equals(dict.getDictLabel()))
+                    {
+                        return dict.getDictValue();
+                    }
                 }
             }
         }

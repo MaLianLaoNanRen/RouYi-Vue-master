@@ -5,32 +5,46 @@ import org.springframework.stereotype.Component;
 
 /**
  * 读取项目相关配置
- * 
+ *
  * @author ruoyi
  */
 @Component
 @ConfigurationProperties(prefix = "ruoyi")
 public class RuoYiConfig
 {
-    /** 项目名称 */
+    /**
+     * 项目名称
+     */
     private String name;
 
-    /** 版本 */
+    /**
+     * 版本
+     */
     private String version;
 
-    /** 版权年份 */
+    /**
+     * 版权年份
+     */
     private String copyrightYear;
 
-    /** 实例演示开关 */
+    /**
+     * 实例演示开关
+     */
     private boolean demoEnabled;
 
-    /** 上传路径 */
+    /**
+     * 上传路径
+     */
     private static String profile;
 
-    /** 获取地址开关 */
+    /**
+     * 获取地址开关
+     */
     private static boolean addressEnabled;
 
-    /** 验证码类型 */
+    /**
+     * 验证码类型
+     */
     private static String captchaType;
 
     public String getName()
@@ -93,11 +107,13 @@ public class RuoYiConfig
         RuoYiConfig.addressEnabled = addressEnabled;
     }
 
-    public static String getCaptchaType() {
+    public static String getCaptchaType()
+    {
         return captchaType;
     }
 
-    public void setCaptchaType(String captchaType) {
+    public void setCaptchaType(String captchaType)
+    {
         RuoYiConfig.captchaType = captchaType;
     }
 

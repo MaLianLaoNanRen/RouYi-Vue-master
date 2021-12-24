@@ -11,22 +11,22 @@ public class EscapeUtil
 {
     public static final String RE_HTML_MARK = "(<[^<]*?>)|(<[\\s]*?/[^<]*?>)|(<[^<]*?/[\\s]*?>)";
 
-    private static final char[][] TEXT = new char[64][];
-
-    static
-    {
-        for (int i = 0; i < 64; i++)
-        {
-            TEXT[i] = new char[] { (char) i };
-        }
-
-        // special HTML characters
-        TEXT['\''] = "&#039;".toCharArray(); // 单引号
-        TEXT['"'] = "&#34;".toCharArray(); // 双引号
-        TEXT['&'] = "&#38;".toCharArray(); // &符
-        TEXT['<'] = "&#60;".toCharArray(); // 小于号
-        TEXT['>'] = "&#62;".toCharArray(); // 大于号
-    }
+    // private static final char[][] TEXT = new char[64][];
+    //
+    // static
+    // {
+    //     for (int i = 0; i < 64; i++)
+    //     {
+    //         TEXT[i] = new char[] { (char) i };
+    //     }
+    //
+    //     // special HTML characters
+    //     TEXT['\''] = "&#039;".toCharArray(); // 单引号
+    //     TEXT['"'] = "&#34;".toCharArray(); // 双引号
+    //     TEXT['&'] = "&#38;".toCharArray(); // &符
+    //     TEXT['<'] = "&#60;".toCharArray(); // 小于号
+    //     TEXT['>'] = "&#62;".toCharArray(); // 大于号
+    // }
 
     /**
      * 转义文本中的HTML字符为安全的字符
@@ -116,7 +116,7 @@ public class EscapeUtil
         }
 
         StringBuilder tmp = new StringBuilder(content.length());
-        int lastPos = 0, pos = 0;
+        int lastPos = 0, pos;
         char ch;
         while (lastPos < content.length())
         {
@@ -145,7 +145,7 @@ public class EscapeUtil
                 }
                 else
                 {
-                    tmp.append(content.substring(lastPos, pos));
+                    tmp.append(content, lastPos, pos);
                     lastPos = pos;
                 }
             }

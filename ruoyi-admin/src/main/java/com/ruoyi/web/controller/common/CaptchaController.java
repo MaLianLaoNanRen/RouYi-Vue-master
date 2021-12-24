@@ -43,7 +43,7 @@ public class CaptchaController
      * 生成验证码
      */
     @GetMapping("/captchaImage")
-    public AjaxResult getCode()// 原参数：HttpServletResponse response
+    public AjaxResult getCode(HttpServletResponse response)
     {
         AjaxResult ajax = AjaxResult.success();
         boolean captchaOnOff = sysConfigService.selectCaptchaOnOff();

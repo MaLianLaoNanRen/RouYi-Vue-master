@@ -2,7 +2,7 @@ package com.ruoyi.common.utils;
 
 /**
  * 处理并记录日志文件
- * 
+ *
  * @author ruoyi
  */
 public class LogUtils
@@ -13,6 +13,6 @@ public class LogUtils
         {
             msg = "";
         }
-        return "[" + msg.toString() + "]";
+        return "[" + msg + "]";
     }
 }

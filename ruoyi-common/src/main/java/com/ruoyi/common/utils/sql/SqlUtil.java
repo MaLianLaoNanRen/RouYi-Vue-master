@@ -5,7 +5,7 @@ import com.ruoyi.common.utils.StringUtils;
 
 /**
  * sql操作工具类
- * 
+ *
  * @author ruoyi
  */
 public class SqlUtil
@@ -18,7 +18,7 @@ public class SqlUtil
     /**
      * 仅支持字母、数字、下划线、空格、逗号、小数点（支持多个字段排序）
      */
-    public static String SQL_PATTERN = "[a-zA-Z0-9_\\ \\,\\.]+";
+    public static String SQL_PATTERN = "[a-zA-Z0-9_ ,.]+";
 
     /**
      * 检查字符，防止注入绕过
@@ -50,9 +50,9 @@ public class SqlUtil
             return;
         }
         String[] sqlKeywords = StringUtils.split(SQL_REGEX, "\\|");
-        for (int i = 0; i < sqlKeywords.length; i++)
+        for (String sqlKeyword : sqlKeywords)
         {
-            if (StringUtils.indexOfIgnoreCase(value, sqlKeywords[i]) > -1)
+            if (StringUtils.indexOfIgnoreCase(value, sqlKeyword) > -1)
             {
                 throw new UtilException("参数存在SQL注入风险");
             }

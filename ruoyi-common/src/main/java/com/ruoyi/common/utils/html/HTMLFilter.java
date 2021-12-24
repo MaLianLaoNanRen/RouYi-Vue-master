@@ -122,13 +122,13 @@ public final class HTMLFilter
         vAllowed.put("i", no_atts);
         vAllowed.put("em", no_atts);
 
-        vSelfClosingTags = new String[] { "img" };
-        vNeedClosingTags = new String[] { "a", "b", "strong", "i", "em" };
-        vDisallowed = new String[] {};
-        vAllowedProtocols = new String[] { "http", "mailto", "https" }; // no ftp.
-        vProtocolAtts = new String[] { "src", "href" };
-        vRemoveBlanks = new String[] { "a", "b", "strong", "i", "em" };
-        vAllowedEntities = new String[] { "amp", "gt", "lt", "quot" };
+        vSelfClosingTags = new String[]{"img"};
+        vNeedClosingTags = new String[]{"a", "b", "strong", "i", "em"};
+        vDisallowed = new String[]{};
+        vAllowedProtocols = new String[]{"http", "mailto", "https"}; // no ftp.
+        vProtocolAtts = new String[]{"src", "href"};
+        vRemoveBlanks = new String[]{"a", "b", "strong", "i", "em"};
+        vAllowedEntities = new String[]{"amp", "gt", "lt", "quot"};
         stripComment = true;
         encodeQuotes = true;
         alwaysMakeTags = false;
@@ -463,7 +463,7 @@ public final class HTMLFilter
         while (m.find())
         {
             final String match = m.group(1);
-            final int decimal = Integer.decode(match).intValue();
+            final int decimal = Integer.decode(match);
             m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
         }
         m.appendTail(buf);
@@ -471,28 +471,28 @@ public final class HTMLFilter
 
         buf = new StringBuffer();
         m = P_ENTITY_UNICODE.matcher(s);
-        while (m.find())
-        {
-            final String match = m.group(1);
-            final int decimal = Integer.valueOf(match, 16).intValue();
-            m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
-        }
+        this.opearM(buf, m);
         m.appendTail(buf);
         s = buf.toString();
 
         buf = new StringBuffer();
         m = P_ENCODE.matcher(s);
-        while (m.find())
-        {
-            final String match = m.group(1);
-            final int decimal = Integer.valueOf(match, 16).intValue();
-            m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
-        }
+        this.opearM(buf, m);
         m.appendTail(buf);
         s = buf.toString();
 
         s = validateEntities(s);
         return s;
+    }
+
+    private void opearM(StringBuffer buf, Matcher m)
+    {
+        while (m.find())
+        {
+            final String match = m.group(1);
+            final int decimal = Integer.valueOf(match, 16);
+            m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
+        }
     }
 
     private String validateEntities(final String s)

@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 
 /**
  * 通用常量信息
- * 
+ *
  * @author ruoyi
  */
 public class Constants
@@ -152,6 +152,5 @@ public class Constants
     /**
      * 定时任务违规的字符
      */
-    public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
-            "org.springframework.jndi" };
+    public static final String[] JOB_ERROR_STR = {"java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml", "org.springframework.jndi"};
 }

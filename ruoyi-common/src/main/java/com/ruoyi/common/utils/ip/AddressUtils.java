@@ -10,7 +10,7 @@ import com.ruoyi.common.utils.http.HttpUtils;
 
 /**
  * 获取地址类
- * 
+ *
  * @author ruoyi
  */
 public class AddressUtils
@@ -25,7 +25,6 @@ public class AddressUtils
 
     public static String getRealAddressByIP(String ip)
     {
-        String address = UNKNOWN;
         // 内网不查询
         if (IpUtils.internalIp(ip))
         {
@@ -51,6 +50,6 @@ public class AddressUtils
                 log.error("获取地理位置异常 {}", ip);
             }
         }
-        return address;
+        return UNKNOWN;
     }
 }

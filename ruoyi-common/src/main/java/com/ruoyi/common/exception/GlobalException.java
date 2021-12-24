@@ -2,7 +2,7 @@ package com.ruoyi.common.exception;
 
 /**
  * 全局异常
- * 
+ *
  * @author ruoyi
  */
 public class GlobalException extends RuntimeException
@@ -17,7 +17,6 @@ public class GlobalException extends RuntimeException
 
     /**
      * 错误明细，内部调试错误
-     *
      * 和 {@link CommonResult#getDetailMessage()} 一致的设计
      */
     private String detailMessage;
