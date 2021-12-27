@@ -1,18 +1,5 @@
 package com.ruoyi.quartz.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -25,17 +12,24 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.quartz.domain.SysJob;
 import com.ruoyi.quartz.service.ISysJobService;
 import com.ruoyi.quartz.util.CronUtils;
+import org.quartz.SchedulerException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 调度任务信息操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
 @RequestMapping("/monitor/job")
 public class SysJobController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysJobService jobService;
 
     /**
@@ -59,7 +53,7 @@ public class SysJobController extends BaseController
     public void export(HttpServletResponse response, SysJob sysJob)
     {
         List<SysJob> list = jobService.selectJobList(sysJob);
-        ExcelUtil<SysJob> util = new ExcelUtil<SysJob>(SysJob.class);
+        ExcelUtil<SysJob> util = new ExcelUtil<>(SysJob.class);
         util.exportExcel(response, list, "定时任务");
     }
 
@@ -93,7 +87,7 @@ public class SysJobController extends BaseController
         {
             return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap://'调用");
         }
-        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[] { Constants.HTTP, Constants.HTTPS }))
+        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{Constants.HTTP, Constants.HTTPS}))
         {
             return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
         }
@@ -125,7 +119,7 @@ public class SysJobController extends BaseController
         {
             return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap://'调用");
         }
-        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[] { Constants.HTTP, Constants.HTTPS }))
+        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{Constants.HTTP, Constants.HTTPS}))
         {
             return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
         }
