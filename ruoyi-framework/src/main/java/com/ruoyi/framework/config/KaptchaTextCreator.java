@@ -1,11 +1,12 @@
 package com.ruoyi.framework.config;
 
 import java.util.Random;
+
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;
 
 /**
  * 验证码文本生成器
- * 
+ *
  * @author ruoyi
  */
 public class KaptchaTextCreator extends DefaultTextCreator
@@ -15,7 +16,7 @@ public class KaptchaTextCreator extends DefaultTextCreator
     @Override
     public String getText()
     {
-        Integer result = 0;
+        int result;
         Random random = new Random();
         int x = random.nextInt(10);
         int y = random.nextInt(10);
@@ -69,7 +70,7 @@ public class KaptchaTextCreator extends DefaultTextCreator
             suChinese.append("+");
             suChinese.append(CNUMBERS[y]);
         }
-        suChinese.append("=?@" + result);
+        suChinese.append("=?@").append(result);
         return suChinese.toString();
     }
 }

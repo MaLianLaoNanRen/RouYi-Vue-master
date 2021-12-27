@@ -9,21 +9,20 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import com.alibaba.fastjson.parser.ParserConfig;
 import org.springframework.util.Assert;
+
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Redis使用FastJson序列化
- * 
+ *
  * @author ruoyi
  */
 public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T>
 {
-    @SuppressWarnings("unused")
-    private ObjectMapper objectMapper = new ObjectMapper();
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
-
-    private Class<T> clazz;
+    private final Class<T> clazz;
 
     static
     {
@@ -61,7 +60,6 @@ public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T>
     public void setObjectMapper(ObjectMapper objectMapper)
     {
         Assert.notNull(objectMapper, "'objectMapper' must not be null");
-        this.objectMapper = objectMapper;
     }
 
     protected JavaType getJavaType(Class<?> clazz)

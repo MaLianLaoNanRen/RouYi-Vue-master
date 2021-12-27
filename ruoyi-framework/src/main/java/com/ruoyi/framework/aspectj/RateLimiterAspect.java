@@ -3,6 +3,7 @@ package com.ruoyi.framework.aspectj;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -48,7 +49,7 @@ public class RateLimiterAspect
     }
 
     @Before("@annotation(rateLimiter)")
-    public void doBefore(JoinPoint point, RateLimiter rateLimiter) throws Throwable
+    public void doBefore(JoinPoint point, RateLimiter rateLimiter)// throws Throwable
     {
         String key = rateLimiter.key();
         int time = rateLimiter.time();
@@ -77,7 +78,7 @@ public class RateLimiterAspect
 
     public String getCombineKey(RateLimiter rateLimiter, JoinPoint point)
     {
-        StringBuffer stringBuffer = new StringBuffer(rateLimiter.key());
+        StringBuilder stringBuffer = new StringBuilder(rateLimiter.key());
         if (rateLimiter.limitType() == LimitType.IP)
         {
             stringBuffer.append(IpUtils.getIpAddr(ServletUtils.getRequest())).append("-");

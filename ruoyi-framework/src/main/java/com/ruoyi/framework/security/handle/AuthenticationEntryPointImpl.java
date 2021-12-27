@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 认证失败处理类 返回未授权
- * 
+ *
  * @author ruoyi
  */
 @Component

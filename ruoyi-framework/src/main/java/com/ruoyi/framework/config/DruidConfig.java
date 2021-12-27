@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.sql.DataSource;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -26,7 +27,7 @@ import com.ruoyi.framework.datasource.DynamicDataSource;
 
 /**
  * druid 配置多数据源
- * 
+ *
  * @author ruoyi
  */
 @Configuration
@@ -58,13 +59,13 @@ public class DruidConfig
         setDataSource(targetDataSources, DataSourceType.SLAVE.name(), "slaveDataSource");
         return new DynamicDataSource(masterDataSource, targetDataSources);
     }
-    
+
     /**
      * 设置数据源
-     * 
+     *
      * @param targetDataSources 备选数据源集合
-     * @param sourceName 数据源名称
-     * @param beanName bean名称
+     * @param sourceName        数据源名称
+     * @param beanName          bean名称
      */
     public void setDataSource(Map<Object, Object> targetDataSources, String sourceName, String beanName)
     {
@@ -73,7 +74,7 @@ public class DruidConfig
             DataSource dataSource = SpringUtils.getBean(beanName);
             targetDataSources.put(sourceName, dataSource);
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {
         }
     }
@@ -81,7 +82,7 @@ public class DruidConfig
     /**
      * 去除监控页面底部的广告
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
     @ConditionalOnProperty(name = "spring.datasource.druid.statViewServlet.enabled", havingValue = "true")
     public FilterRegistrationBean removeDruidFilterRegistrationBean(DruidStatProperties properties)
@@ -96,9 +97,10 @@ public class DruidConfig
         Filter filter = new Filter()
         {
             @Override
-            public void init(javax.servlet.FilterConfig filterConfig) throws ServletException
+            public void init(javax.servlet.FilterConfig filterConfig)// throws ServletException
             {
             }
+
             @Override
             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
                     throws IOException, ServletException
@@ -113,6 +115,7 @@ public class DruidConfig
                 text = text.replaceAll("powered.*?shrek.wang</a>", "");
                 response.getWriter().write(text);
             }
+
             @Override
             public void destroy()
             {
