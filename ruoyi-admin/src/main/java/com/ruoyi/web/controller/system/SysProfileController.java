@@ -68,7 +68,7 @@ public class SysProfileController extends BaseController
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-        user.setUserId(sysUser.getUserId());
+        user.setId(sysUser.getId());
         user.setPassword(null);
         if (sysUserService.updateUserProfile(user) > 0)
         {

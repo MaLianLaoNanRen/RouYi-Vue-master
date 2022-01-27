@@ -121,10 +121,10 @@ public class SysLoginService
      *
      * @param userId 用户ID
      */
-    public void recordLoginInfo(Long userId)
+    public void recordLoginInfo(String userId)
     {
         SysUser sysUser = new SysUser();
-        sysUser.setUserId(userId);
+        sysUser.setId(userId);
         sysUser.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
         sysUser.setLoginDate(DateUtils.getNowDate());
         sysUserService.updateUserProfile(sysUser);

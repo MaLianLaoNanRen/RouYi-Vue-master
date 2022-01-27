@@ -40,7 +40,7 @@ public class SysPermissionService
         }
         else
         {
-            roles.addAll(sysRoleService.selectRolePermissionByUserId(user.getUserId()));
+            roles.addAll(sysRoleService.selectRolePermissionByUserId(user.getId()));
         }
         return roles;
     }
@@ -61,7 +61,7 @@ public class SysPermissionService
         }
         else
         {
-            perms.addAll(sysMenuService.selectMenuPermsByUserId(user.getUserId()));
+            perms.addAll(sysMenuService.selectMenuPermsByUserId(user.getId()));
         }
         return perms;
     }

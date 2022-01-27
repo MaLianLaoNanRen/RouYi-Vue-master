@@ -49,10 +49,10 @@ public class SysConfigServiceImpl implements ISysConfigService
      */
     @Override
     @DataSource(DataSourceType.MASTER)
-    public SysConfig selectConfigById(Long configId)
+    public SysConfig selectConfigById(String configId)
     {
         SysConfig config = new SysConfig();
-        config.setConfigId(configId);
+        config.setId(configId);
         return sysConfigMapper.selectConfig(config);
     }
 
@@ -149,9 +149,9 @@ public class SysConfigServiceImpl implements ISysConfigService
      * @param configIds 需要删除的参数ID
      */
     @Override
-    public void deleteConfigByIds(Long[] configIds)
+    public void deleteConfigByIds(String[] configIds)
     {
-        for (Long configId : configIds)
+        for (String configId : configIds)
         {
             SysConfig config = selectConfigById(configId);
             if (StringUtils.equals(UserConstants.YES, config.getConfigType()))
@@ -205,9 +205,9 @@ public class SysConfigServiceImpl implements ISysConfigService
     @Override
     public String checkConfigKeyUnique(SysConfig config)
     {
-        long configId = StringUtils.isNull(config.getConfigId()) ? -1L : config.getConfigId();
+        String configId = config.getId();
         SysConfig info = sysConfigMapper.checkConfigKeyUnique(config.getConfigKey());
-        if (StringUtils.isNotNull(info) && info.getConfigId() != configId)
+        if (StringUtils.isNotNull(info) && !info.getId().equals(configId))
         {
             return UserConstants.NOT_UNIQUE;
         }

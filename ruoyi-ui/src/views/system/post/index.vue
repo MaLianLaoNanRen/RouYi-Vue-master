@@ -83,7 +83,7 @@
 
     <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="岗位编号" align="center" prop="postId" />
+      <el-table-column label="岗位编号" align="center" prop="id" width="270" />
       <el-table-column label="岗位编码" align="center" prop="postCode" />
       <el-table-column label="岗位名称" align="center" prop="postName" />
       <el-table-column label="岗位排序" align="center" prop="postSort" />
@@ -229,7 +229,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        postId: undefined,
+        id: undefined,
         postCode: undefined,
         postName: undefined,
         postSort: 0,
@@ -250,7 +250,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
@@ -263,8 +263,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const postId = row.postId || this.ids
-      getPost(postId).then(response => {
+      const id = row.id || this.ids
+      getPost(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改岗位";
@@ -274,7 +274,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.postId != undefined) {
+          if (this.form.id != undefined) {
             updatePost(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -292,9 +292,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const postIds = row.postId || this.ids;
-      this.$modal.confirm('是否确认删除岗位编号为"' + postIds + '"的数据项？').then(function() {
-        return delPost(postIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除岗位编号为"' + ids + '"的数据项？').then(function() {
+        return delPost(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

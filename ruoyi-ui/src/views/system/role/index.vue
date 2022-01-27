@@ -103,7 +103,7 @@
 
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="角色编号" prop="roleId" width="120" />
+      <el-table-column label="角色编号" prop="id" width="270" align="center" />
       <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="150" />
       <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" width="150" />
       <el-table-column label="显示顺序" prop="roleSort" width="100" />
@@ -123,7 +123,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope" v-if="scope.row.roleId !== 1">
+        <template slot-scope="scope" v-if="scope.row.id !== 1">
           <el-button
             size="mini"
             type="text"
@@ -410,7 +410,7 @@ export default {
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
       this.$modal.confirm('确认要"' + text + '""' + row.roleName + '"角色吗？').then(function() {
-        return changeRoleStatus(row.roleId, row.status);
+        return changeRoleStatus(row.id, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function() {
@@ -437,7 +437,7 @@ export default {
       this.deptExpand = true,
       this.deptNodeAll = false,
       this.form = {
-        roleId: undefined,
+        id: undefined,
         roleName: undefined,
         roleKey: undefined,
         roleSort: 0,
@@ -463,7 +463,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.roleId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
@@ -520,7 +520,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const roleId = row.roleId || this.ids
+      const roleId = row.id || this.ids
       const roleMenu = this.getRoleMenuTreeselect(roleId);
       getRole(roleId).then(response => {
         this.form = response.data;
@@ -547,8 +547,8 @@ export default {
     /** 分配数据权限操作 */
     handleDataScope(row) {
       this.reset();
-      const roleDeptTreeselect = this.getRoleDeptTreeselect(row.roleId);
-      getRole(row.roleId).then(response => {
+      const roleDeptTreeselect = this.getRoleDeptTreeselect(row.id);
+      getRole(row.id).then(response => {
         this.form = response.data;
         this.openDataScope = true;
         this.$nextTick(() => {
@@ -561,14 +561,14 @@ export default {
     },
     /** 分配用户操作 */
     handleAuthUser: function(row) {
-      const roleId = row.roleId;
+      const roleId = row.id;
       this.$router.push("/system/role-auth/user/" + roleId);
     },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.roleId != undefined) {
+          if (this.form.id != undefined) {
             this.form.menuIds = this.getMenuAllCheckedKeys();
             updateRole(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -588,7 +588,7 @@ export default {
     },
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
-      if (this.form.roleId != undefined) {
+      if (this.form.id != undefined) {
         this.form.deptIds = this.getDeptAllCheckedKeys();
         dataScope(this.form).then(response => {
           this.$modal.msgSuccess("修改成功");
@@ -599,7 +599,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const roleIds = row.roleId || this.ids;
+      const roleIds = row.id || this.ids;
       this.$modal.confirm('是否确认删除角色编号为"' + roleIds + '"的数据项？').then(function() {
         return delRole(roleIds);
       }).then(() => {

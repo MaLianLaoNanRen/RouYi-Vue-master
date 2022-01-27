@@ -63,7 +63,7 @@ public class SysConfigController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:config:query')")
     @GetMapping(value = "/{configId}")
-    public AjaxResult getInfo(@PathVariable Long configId)
+    public AjaxResult getInfo(@PathVariable String configId)
     {
         return AjaxResult.success(iSysConfigService.selectConfigById(configId));
     }
@@ -115,7 +115,7 @@ public class SysConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{configIds}")
-    public AjaxResult remove(@PathVariable Long[] configIds)
+    public AjaxResult remove(@PathVariable String[] configIds)
     {
         iSysConfigService.deleteConfigByIds(configIds);
         return success();

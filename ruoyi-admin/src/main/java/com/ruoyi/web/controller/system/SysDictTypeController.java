@@ -60,7 +60,7 @@ public class SysDictTypeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
     @GetMapping(value = "/{dictId}")
-    public AjaxResult getInfo(@PathVariable Long dictId)
+    public AjaxResult getInfo(@PathVariable String dictId)
     {
         return AjaxResult.success(sysDictTypeService.selectDictTypeById(dictId));
     }
@@ -103,7 +103,7 @@ public class SysDictTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.DELETE)
     @DeleteMapping("/{dictIds}")
-    public AjaxResult remove(@PathVariable Long[] dictIds)
+    public AjaxResult remove(@PathVariable String[] dictIds)
     {
         sysDictTypeService.deleteDictTypeByIds(dictIds);
         return success();

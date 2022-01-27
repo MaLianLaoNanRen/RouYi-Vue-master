@@ -64,7 +64,7 @@ public class SysJobServiceImpl implements ISysJobService
      * @return 调度任务对象信息
      */
     @Override
-    public SysJob selectJobById(Long jobId)
+    public SysJob selectJobById(String jobId)
     {
         return sysJobMapper.selectJobById(jobId);
     }
@@ -78,7 +78,7 @@ public class SysJobServiceImpl implements ISysJobService
     @Transactional(rollbackFor = Exception.class)
     public int pauseJob(SysJob job) throws SchedulerException
     {
-        Long jobId = job.getJobId();
+        String jobId = job.getId();
         String jobGroup = job.getJobGroup();
         job.setStatus(ScheduleConstants.Status.PAUSE.getValue());
         int rows = sysJobMapper.updateJob(job);
@@ -98,7 +98,7 @@ public class SysJobServiceImpl implements ISysJobService
     @Transactional(rollbackFor = Exception.class)
     public int resumeJob(SysJob job) throws SchedulerException
     {
-        Long jobId = job.getJobId();
+        String jobId = job.getId();
         String jobGroup = job.getJobGroup();
         job.setStatus(ScheduleConstants.Status.NORMAL.getValue());
         int rows = sysJobMapper.updateJob(job);
@@ -118,7 +118,7 @@ public class SysJobServiceImpl implements ISysJobService
     @Transactional(rollbackFor = Exception.class)
     public int deleteJob(SysJob job) throws SchedulerException
     {
-        Long jobId = job.getJobId();
+        String jobId = job.getId();
         String jobGroup = job.getJobGroup();
         int rows = sysJobMapper.deleteJobById(jobId);
         if (rows > 0)
@@ -135,9 +135,9 @@ public class SysJobServiceImpl implements ISysJobService
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteJobByIds(Long[] jobIds) throws SchedulerException
+    public void deleteJobByIds(String[] jobIds) throws SchedulerException
     {
-        for (Long jobId : jobIds)
+        for (String jobId : jobIds)
         {
             SysJob job = sysJobMapper.selectJobById(jobId);
             deleteJob(job);
@@ -175,9 +175,9 @@ public class SysJobServiceImpl implements ISysJobService
     @Transactional(rollbackFor = Exception.class)
     public void run(SysJob job) throws SchedulerException
     {
-        Long jobId = job.getJobId();
+        String jobId = job.getId();
         String jobGroup = job.getJobGroup();
-        SysJob properties = selectJobById(job.getJobId());
+        SysJob properties = selectJobById(job.getId());
         // 参数
         JobDataMap dataMap = new JobDataMap();
         dataMap.put(ScheduleConstants.TASK_PROPERTIES, properties);
@@ -211,7 +211,7 @@ public class SysJobServiceImpl implements ISysJobService
     @Transactional(rollbackFor = Exception.class)
     public int updateJob(SysJob job) throws SchedulerException, TaskException
     {
-        SysJob properties = selectJobById(job.getJobId());
+        SysJob properties = selectJobById(job.getId());
         int rows = sysJobMapper.updateJob(job);
         if (rows > 0)
         {
@@ -228,7 +228,7 @@ public class SysJobServiceImpl implements ISysJobService
      */
     public void updateSchedulerJob(SysJob job, String jobGroup) throws SchedulerException, TaskException
     {
-        Long jobId = job.getJobId();
+        String jobId = job.getId();
         // 判断是否存在
         JobKey jobKey = ScheduleUtils.getJobKey(jobId, jobGroup);
         if (scheduler.checkExists(jobKey))

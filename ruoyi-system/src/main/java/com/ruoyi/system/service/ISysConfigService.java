@@ -17,7 +17,7 @@ public interface ISysConfigService
      * @param configId 参数配置ID
      * @return 参数配置信息
      */
-    SysConfig selectConfigById(Long configId);
+    SysConfig selectConfigById(String configId);
 
     /**
      * 根据键名查询参数配置信息
@@ -63,7 +63,7 @@ public interface ISysConfigService
      *
      * @param configIds 需要删除的参数ID
      */
-    void deleteConfigByIds(Long[] configIds);
+    void deleteConfigByIds(String[] configIds);
 
     /**
      * 加载参数缓存数据

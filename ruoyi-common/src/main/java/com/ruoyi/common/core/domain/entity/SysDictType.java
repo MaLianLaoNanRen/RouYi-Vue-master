@@ -23,8 +23,8 @@ public class SysDictType extends BaseEntity
     /**
      * 字典主键
      */
-    @Excel(name = "字典主键", cellType = ColumnType.NUMERIC)
-    private Long dictId;
+    @Excel(name = "字典主键", cellType = ColumnType.STRING)
+    private String id;
 
     /**
      * 字典名称

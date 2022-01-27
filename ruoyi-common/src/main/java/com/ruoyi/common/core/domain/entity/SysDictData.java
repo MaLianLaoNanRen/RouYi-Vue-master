@@ -24,8 +24,8 @@ public class SysDictData extends BaseEntity
     /**
      * 字典编码
      */
-    @Excel(name = "字典编码", cellType = ColumnType.NUMERIC)
-    private Long dictCode;
+    @Excel(name = "字典编码", cellType = ColumnType.STRING)
+    private String dictCode;
 
     /**
      * 字典排序

@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
@@ -116,7 +117,7 @@ public class SysUserServiceImpl implements ISysUserService
      * @return 用户对象信息
      */
     @Override
-    public SysUser selectUserById(Long userId)
+    public SysUser selectUserById(String userId)
     {
         return userMapper.selectUserById(userId);
     }
@@ -180,9 +181,9 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public String checkPhoneUnique(SysUser user)
     {
-        long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
+        String userId = user.getId();
         SysUser info = userMapper.checkPhoneUnique(user.getPhonenumber());
-        if (StringUtils.isNotNull(info) && info.getUserId() != userId)
+        if (StringUtils.isNotNull(info) && !info.getId().equals(userId))
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -197,9 +198,9 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public String checkEmailUnique(SysUser user)
     {
-        long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
+        String userId = user.getId();
         SysUser info = userMapper.checkEmailUnique(user.getEmail());
-        if (StringUtils.isNotNull(info) && info.getUserId() != userId)
+        if (StringUtils.isNotNull(info) && !info.getId().equals(userId))
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -214,7 +215,7 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public void checkUserAllowed(SysUser user)
     {
-        if (StringUtils.isNotNull(user.getUserId()) && user.isAdmin())
+        if (StringUtils.isNotNull(user.getId()) && user.isAdmin())
         {
             throw new ServiceException("不允许操作超级管理员用户");
         }
@@ -226,12 +227,12 @@ public class SysUserServiceImpl implements ISysUserService
      * @param userId 用户id
      */
     @Override
-    public void checkUserDataScope(Long userId)
+    public void checkUserDataScope(String userId)
     {
         if (!SysUser.isAdmin(SecurityUtils.getUserId()))
         {
             SysUser user = new SysUser();
-            user.setUserId(userId);
+            user.setId(userId);
             List<SysUser> users = SpringUtils.getAopProxy(this).selectUserList(user);
             if (StringUtils.isEmpty(users))
             {
@@ -281,7 +282,7 @@ public class SysUserServiceImpl implements ISysUserService
     @Transactional
     public int updateUser(SysUser user)
     {
-        Long userId = user.getUserId();
+        String userId = user.getId();
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
         // 新增用户与角色管理
@@ -301,7 +302,7 @@ public class SysUserServiceImpl implements ISysUserService
      */
     @Override
     @Transactional
-    public void insertUserAuth(Long userId, Long[] roleIds)
+    public void insertUserAuth(String userId, String[] roleIds)
     {
         userRoleMapper.deleteUserRoleByUserId(userId);
         insertUserRole(userId, roleIds);
@@ -316,7 +317,7 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public int updateUserStatus(SysUser user)
     {
-        return userMapper.updateUser(user);
+        return userMapper.updateUserStatus(user);
     }
 
     /**
@@ -376,15 +377,15 @@ public class SysUserServiceImpl implements ISysUserService
      */
     public void insertUserRole(SysUser user)
     {
-        Long[] roles = user.getRoleIds();
+        String[] roles = user.getRoleIds();
         if (StringUtils.isNotNull(roles))
         {
             // 新增用户与角色管理
             List<SysUserRole> list = new ArrayList<>();
-            for (Long roleId : roles)
+            for (String roleId : roles)
             {
                 SysUserRole ur = new SysUserRole();
-                ur.setUserId(user.getUserId());
+                ur.setUserId(user.getId());
                 ur.setRoleId(roleId);
                 list.add(ur);
             }
@@ -402,15 +403,15 @@ public class SysUserServiceImpl implements ISysUserService
      */
     public void insertUserPost(SysUser user)
     {
-        Long[] posts = user.getPostIds();
+        String[] posts = user.getPostIds();
         if (StringUtils.isNotNull(posts))
         {
             // 新增用户与岗位管理
             List<SysUserPost> list = new ArrayList<>();
-            for (Long postId : posts)
+            for (String postId : posts)
             {
                 SysUserPost up = new SysUserPost();
-                up.setUserId(user.getUserId());
+                up.setUserId(user.getId());
                 up.setPostId(postId);
                 list.add(up);
             }
@@ -427,13 +428,13 @@ public class SysUserServiceImpl implements ISysUserService
      * @param userId  用户ID
      * @param roleIds 角色组
      */
-    public void insertUserRole(Long userId, Long[] roleIds)
+    public void insertUserRole(String userId, String[] roleIds)
     {
         if (StringUtils.isNotNull(roleIds))
         {
             // 新增用户与角色管理
             List<SysUserRole> list = new ArrayList<>();
-            for (Long roleId : roleIds)
+            for (String roleId : roleIds)
             {
                 SysUserRole ur = new SysUserRole();
                 ur.setUserId(userId);
@@ -455,7 +456,7 @@ public class SysUserServiceImpl implements ISysUserService
      */
     @Override
     @Transactional
-    public int deleteUserById(Long userId)
+    public int deleteUserById(String userId)
     {
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
@@ -472,9 +473,9 @@ public class SysUserServiceImpl implements ISysUserService
      */
     @Override
     @Transactional
-    public int deleteUserByIds(Long[] userIds)
+    public int deleteUserByIds(String[] userIds)
     {
-        for (Long userId : userIds)
+        for (String userId : userIds)
         {
             checkUserAllowed(new SysUser(userId));
         }

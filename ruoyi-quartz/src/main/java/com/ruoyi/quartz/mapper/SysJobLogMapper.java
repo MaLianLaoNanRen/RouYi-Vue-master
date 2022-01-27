@@ -34,7 +34,7 @@ public interface SysJobLogMapper
      * @param jobLogId 调度任务日志ID
      * @return 调度任务日志对象信息
      */
-    SysJobLog selectJobLogById(Long jobLogId);
+    SysJobLog selectJobLogById(String jobLogId);
 
     /**
      * 新增任务日志
@@ -50,7 +50,7 @@ public interface SysJobLogMapper
      * @param logIds 需要删除的数据ID
      * @return 结果
      */
-    int deleteJobLogByIds(Long[] logIds);
+    int deleteJobLogByIds(String[] logIds);
 
     /**
      * 删除任务日志
@@ -58,7 +58,7 @@ public interface SysJobLogMapper
      * @param jobId 调度日志ID
      * @return 结果
      */
-    int deleteJobLogById(Long jobId);
+    int deleteJobLogById(String jobId);
 
     /**
      * 清空任务日志

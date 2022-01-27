@@ -5,8 +5,6 @@ import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -25,8 +23,8 @@ public class SysConfig extends BaseEntity
     /**
      * 参数主键
      */
-    @Excel(name = "参数主键", cellType = ColumnType.NUMERIC)
-    private Long configId;
+    @Excel(name = "参数主键", cellType = ColumnType.STRING)
+    private String id;
 
     /**
      * 参数名称

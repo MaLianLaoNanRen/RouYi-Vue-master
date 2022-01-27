@@ -92,7 +92,7 @@
 
     <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="访问编号" align="center" prop="infoId" />
+      <el-table-column label="访问编号" align="center" prop="id" width="270" />
       <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true" sortable="custom" :sort-orders="['descending', 'ascending']" />
       <el-table-column label="登录地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true" />
       <el-table-column label="登录地点" align="center" prop="loginLocation" :show-overflow-tooltip="true" />
@@ -183,7 +183,7 @@ export default {
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.infoId)
+      this.ids = selection.map(item => item.id)
       this.multiple = !selection.length
     },
     /** 排序触发事件 */
@@ -194,9 +194,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const infoIds = row.infoId || this.ids;
-      this.$modal.confirm('是否确认删除访问编号为"' + infoIds + '"的数据项？').then(function() {
-        return delLogininfor(infoIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除访问编号为"' + ids + '"的数据项？').then(function() {
+        return delLogininfor(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

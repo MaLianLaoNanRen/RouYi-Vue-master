@@ -13,10 +13,10 @@ public class SysUserPost
     /**
      * 用户ID
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 岗位ID
      */
-    private Long postId;
+    private String postId;
 }

@@ -8,6 +8,7 @@ import com.ruoyi.common.core.text.CharsetKit;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.generator.domain.GenTable;
 import com.ruoyi.generator.domain.GenTableColumn;
 import com.ruoyi.generator.mapper.GenTableColumnMapper;
@@ -60,7 +61,7 @@ public class GenTableServiceImpl implements IGenTableService
      * @return 业务信息
      */
     @Override
-    public GenTable selectGenTableById(Long id)
+    public GenTable selectGenTableById(String id)
     {
         GenTable genTable = genTableMapper.selectGenTableById(id);
         setTableFromOptions(genTable);
@@ -142,7 +143,7 @@ public class GenTableServiceImpl implements IGenTableService
      */
     @Override
     @Transactional
-    public void deleteGenTableByIds(Long[] tableIds)
+    public void deleteGenTableByIds(String[] tableIds)
     {
         genTableMapper.deleteGenTableByIds(tableIds);
         genTableColumnMapper.deleteGenTableColumnByIds(tableIds);
@@ -164,6 +165,8 @@ public class GenTableServiceImpl implements IGenTableService
             {
                 String tableName = table.getTableName();
                 GenUtils.initTable(table, operName);
+                String uuid = IdUtils.fastSimpleUUID();
+                table.setId(uuid);
                 int row = genTableMapper.insertGenTable(table);
                 if (row > 0)
                 {
@@ -190,7 +193,7 @@ public class GenTableServiceImpl implements IGenTableService
      * @return 预览数据列表
      */
     @Override
-    public Map<String, String> previewCode(Long tableId)
+    public Map<String, String> previewCode(String tableId)
     {
         Map<String, String> dataMap = new LinkedHashMap<>();
         // 查询表信息

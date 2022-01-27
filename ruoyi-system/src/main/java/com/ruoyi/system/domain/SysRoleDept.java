@@ -13,10 +13,10 @@ public class SysRoleDept
     /**
      * 角色ID
      */
-    private Long roleId;
+    private String roleId;
 
     /**
      * 部门ID
      */
-    private Long deptId;
+    private String deptId;
 }

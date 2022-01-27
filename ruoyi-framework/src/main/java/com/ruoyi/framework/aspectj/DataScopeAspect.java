@@ -97,7 +97,7 @@ public class DataScopeAspect
             {
                 sqlString.append(StringUtils.format(
                         " OR {}.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = {} ) ", deptAlias,
-                        role.getRoleId()));
+                        role.getId()));
             }
             else if (DATA_SCOPE_DEPT.equals(dataScope))
             {
@@ -113,7 +113,7 @@ public class DataScopeAspect
             {
                 if (StringUtils.isNotBlank(userAlias))
                 {
-                    sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
+                    sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getId()));
                 }
                 else
                 {

@@ -20,8 +20,8 @@ public class SysLogininfor extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    @Excel(name = "序号", cellType = ColumnType.NUMERIC)
-    private Long infoId;
+    @Excel(name = "ID", cellType = ColumnType.STRING)
+    private String id;
 
     /** 用户账号 */
     @Excel(name = "用户账号")

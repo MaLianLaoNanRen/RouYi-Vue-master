@@ -107,7 +107,7 @@
 
     <el-table v-loading="loading" :data="jobLogList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="日志编号" width="80" align="center" prop="jobLogId" />
+      <el-table-column label="日志编号" width="80" align="center" prop="id" />
       <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
       <el-table-column label="任务组名" align="center" prop="jobGroup" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -152,7 +152,7 @@
       <el-form ref="form" :model="form" label-width="100px" size="mini">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="日志序号：">{{ form.jobLogId }}</el-form-item>
+            <el-form-item label="日志序号：">{{ form.id }}</el-form-item>
             <el-form-item label="任务名称：">{{ form.jobName }}</el-form-item>
           </el-col>
           <el-col :span="12">
@@ -261,7 +261,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.jobLogId);
+      this.ids = selection.map(item => item.id);
       this.multiple = !selection.length;
     },
     /** 详细按钮操作 */
@@ -271,9 +271,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const jobLogIds = this.ids;
-      this.$modal.confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项？').then(function() {
-        return delJobLog(jobLogIds);
+      const ids = this.ids;
+      this.$modal.confirm('是否确认删除调度日志编号为"' + ids + '"的数据项？').then(function() {
+        return delJobLog(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

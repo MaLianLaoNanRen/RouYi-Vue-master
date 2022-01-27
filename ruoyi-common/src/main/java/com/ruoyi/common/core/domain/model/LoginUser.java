@@ -24,12 +24,12 @@ public class LoginUser implements UserDetails
     /**
      * 用户ID
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 部门ID
      */
-    private Long deptId;
+    private String deptId;
 
     /**
      * 用户唯一标识
@@ -82,7 +82,7 @@ public class LoginUser implements UserDetails
         this.permissions = permissions;
     }
 
-    public LoginUser(Long userId, Long deptId, SysUser user, Set<String> permissions)
+    public LoginUser(String userId, String deptId, SysUser user, Set<String> permissions)
     {
         this.userId = userId;
         this.deptId = deptId;

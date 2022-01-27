@@ -73,7 +73,7 @@
 
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="noticeId" width="100" />
+      <el-table-column label="序号" align="center" prop="id" width="100" />
       <el-table-column
         label="公告标题"
         align="center"
@@ -239,7 +239,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        noticeId: undefined,
+        id: undefined,
         noticeTitle: undefined,
         noticeType: undefined,
         noticeContent: undefined,
@@ -259,7 +259,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.noticeId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
@@ -272,8 +272,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const noticeId = row.noticeId || this.ids
-      getNotice(noticeId).then(response => {
+      const id = row.id || this.ids
+      getNotice(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改公告";
@@ -283,7 +283,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.noticeId != undefined) {
+          if (this.form.id != undefined) {
             updateNotice(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -301,9 +301,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const noticeIds = row.noticeId || this.ids
-      this.$modal.confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项？').then(function() {
-        return delNotice(noticeIds);
+      const ids = row.id || this.ids
+      this.$modal.confirm('是否确认删除公告编号为"' + ids + '"的数据项？').then(function() {
+        return delNotice(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

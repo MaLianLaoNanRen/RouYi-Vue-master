@@ -57,7 +57,7 @@ public class SysJobLogController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:query')")
     @GetMapping(value = "/{configId}")
-    public AjaxResult getInfo(@PathVariable("configId") Long jobLogId)
+    public AjaxResult getInfo(@PathVariable("configId") String jobLogId)
     {
         return AjaxResult.success(jobLogService.selectJobLogById(jobLogId));
     }
@@ -69,7 +69,7 @@ public class SysJobLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "定时任务调度日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{jobLogIds}")
-    public AjaxResult remove(@PathVariable Long[] jobLogIds)
+    public AjaxResult remove(@PathVariable String[] jobLogIds)
     {
         return toAjax(jobLogService.deleteJobLogByIds(jobLogIds));
     }

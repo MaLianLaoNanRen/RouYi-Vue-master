@@ -294,7 +294,7 @@ export default {
     },
     /** 预览按钮 */
     handlePreview(row) {
-      previewTable(row.tableId).then(response => {
+      previewTable(row.id).then(response => {
         this.preview.data = response.data;
         this.preview.open = true;
         this.preview.activeName = "domain.java";
@@ -313,21 +313,21 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.tableId);
+      this.ids = selection.map(item => item.id);
       this.tableNames = selection.map(item => item.tableName);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
     handleEditTable(row) {
-      const tableId = row.tableId || this.ids[0];
-      this.$router.push({ path: '/tool/gen-edit/index', query: { tableId: tableId, pageNum: this.queryParams.pageNum } });
+      const id = row.id || this.ids[0];
+      this.$router.push({ path: '/tool/gen-edit/index', query: { id: id, pageNum: this.queryParams.pageNum } });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const tableIds = row.tableId || this.ids;
-      this.$modal.confirm('是否确认删除表编号为"' + tableIds + '"的数据项？').then(function() {
-        return delTable(tableIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除表编号为"' + ids + '"的数据项？').then(function() {
+        return delTable(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

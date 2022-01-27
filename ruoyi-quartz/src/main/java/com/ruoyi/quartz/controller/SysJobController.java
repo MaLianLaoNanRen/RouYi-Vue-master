@@ -62,7 +62,7 @@ public class SysJobController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:query')")
     @GetMapping(value = "/{jobId}")
-    public AjaxResult getInfo(@PathVariable("jobId") Long jobId)
+    public AjaxResult getInfo(@PathVariable("jobId") String jobId)
     {
         return AjaxResult.success(jobService.selectJobById(jobId));
     }
@@ -139,7 +139,7 @@ public class SysJobController extends BaseController
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysJob job) throws SchedulerException
     {
-        SysJob newJob = jobService.selectJobById(job.getJobId());
+        SysJob newJob = jobService.selectJobById(job.getId());
         newJob.setStatus(job.getStatus());
         return toAjax(jobService.changeStatus(newJob));
     }
@@ -162,7 +162,7 @@ public class SysJobController extends BaseController
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "定时任务", businessType = BusinessType.DELETE)
     @DeleteMapping("/{jobIds}")
-    public AjaxResult remove(@PathVariable Long[] jobIds) throws SchedulerException, TaskException
+    public AjaxResult remove(@PathVariable String[] jobIds) throws SchedulerException, TaskException
     {
         jobService.deleteJobByIds(jobIds);
         return AjaxResult.success();

@@ -80,7 +80,7 @@ public class SysLoginController
     @GetMapping("getRouters")
     public AjaxResult getRouters()
     {
-        Long userId = SecurityUtils.getUserId();
+        String userId = SecurityUtils.getUserId();
         List<SysMenu> menus = sysMenuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(sysMenuService.buildMenus(menus));
     }

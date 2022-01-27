@@ -27,7 +27,7 @@ public interface GenTableColumnMapper
      * @param tableId 业务字段编号
      * @return 业务字段集合
      */
-    List<GenTableColumn> selectGenTableColumnListByTableId(Long tableId);
+    List<GenTableColumn> selectGenTableColumnListByTableId(String tableId);
 
     /**
      * 新增业务字段
@@ -59,5 +59,5 @@ public interface GenTableColumnMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    int deleteGenTableColumnByIds(Long[] ids);
+    int deleteGenTableColumnByIds(String[] ids);
 }

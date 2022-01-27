@@ -34,7 +34,7 @@ public interface SysPostMapper
      * @param postId 岗位ID
      * @return 角色对象信息
      */
-    SysPost selectPostById(Long postId);
+    SysPost selectPostById(String postId);
 
     /**
      * 根据用户ID获取岗位选择框列表
@@ -42,7 +42,7 @@ public interface SysPostMapper
      * @param userId 用户ID
      * @return 选中岗位ID列表
      */
-    List<Long> selectPostListByUserId(Long userId);
+    List<String> selectPostListByUserId(String userId);
 
     /**
      * 查询用户所属岗位组
@@ -58,7 +58,7 @@ public interface SysPostMapper
      * @param postId 岗位ID
      * @return 结果
      */
-    int deletePostById(Long postId);
+    int deletePostById(String postId);
 
     /**
      * 批量删除岗位信息
@@ -66,7 +66,7 @@ public interface SysPostMapper
      * @param postIds 需要删除的岗位ID
      * @return 结果
      */
-    int deletePostByIds(Long[] postIds);
+    int deletePostByIds(String[] postIds);
 
     /**
      * 修改岗位信息

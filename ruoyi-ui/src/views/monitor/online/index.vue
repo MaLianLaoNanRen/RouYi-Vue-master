@@ -1,19 +1,19 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="登录地址" prop="ipaddr">
+      <el-form-item label="主机地址" prop="ipaddr">
         <el-input
           v-model="queryParams.ipaddr"
-          placeholder="请输入登录地址"
+          placeholder="请输入主机地址"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户名称" prop="userName">
+      <el-form-item label="登录名称" prop="userName">
         <el-input
           v-model="queryParams.userName"
-          placeholder="请输入用户名称"
+          placeholder="请输入登录名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"

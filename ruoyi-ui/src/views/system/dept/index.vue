@@ -53,7 +53,7 @@
       v-if="refreshTable"
       v-loading="loading"
       :data="deptList"
-      row-key="deptId"
+      row-key="id"
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
@@ -222,7 +222,7 @@ export default {
     getList() {
       this.loading = true;
       listDept(this.queryParams).then(response => {
-        this.deptList = this.handleTree(response.data, "deptId");
+        this.deptList = this.handleTree(response.data, "id");
         this.loading = false;
       });
     },
@@ -232,7 +232,7 @@ export default {
         delete node.children;
       }
       return {
-        id: node.deptId,
+        id: node.id,
         label: node.deptName,
         children: node.children
       };
@@ -245,7 +245,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        deptId: undefined,
+        id: undefined,
         parentId: undefined,
         deptName: undefined,
         orderNum: undefined,
@@ -269,12 +269,12 @@ export default {
     handleAdd(row) {
       this.reset();
       if (row != undefined) {
-        this.form.parentId = row.deptId;
+        this.form.parentId = row.id;
       }
       this.open = true;
       this.title = "添加部门";
       listDept().then(response => {
-        this.deptOptions = this.handleTree(response.data, "deptId");
+        this.deptOptions = this.handleTree(response.data, "id");
       });
     },
     /** 展开/折叠操作 */
@@ -288,20 +288,20 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      getDept(row.deptId).then(response => {
+      getDept(row.id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改部门";
       });
-      listDeptExcludeChild(row.deptId).then(response => {
-        this.deptOptions = this.handleTree(response.data, "deptId");
+      listDeptExcludeChild(row.id).then(response => {
+        this.deptOptions = this.handleTree(response.data, "id");
       });
     },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.deptId != undefined) {
+          if (this.form.id != undefined) {
             updateDept(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -320,7 +320,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       this.$modal.confirm('是否确认删除名称为"' + row.deptName + '"的数据项？').then(function() {
-        return delDept(row.deptId);
+        return delDept(row.id);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

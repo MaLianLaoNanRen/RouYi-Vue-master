@@ -59,7 +59,7 @@ public interface SysConfigMapper
      * @param configId 参数ID
      * @return 结果
      */
-    int deleteConfigById(Long configId);
+    int deleteConfigById(String configId);
 
     /**
      * 批量删除参数信息
@@ -67,5 +67,5 @@ public interface SysConfigMapper
      * @param configIds 需要删除的参数ID
      * @return 结果
      */
-    int deleteConfigByIds(Long[] configIds);
+    int deleteConfigByIds(String[] configIds);
 }

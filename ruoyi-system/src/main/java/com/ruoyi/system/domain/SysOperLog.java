@@ -20,8 +20,8 @@ public class SysOperLog extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 日志主键 */
-    @Excel(name = "操作序号", cellType = ColumnType.NUMERIC)
-    private Long operId;
+    @Excel(name = "日志主键", cellType = ColumnType.STRING)
+    private String id;
 
     /** 操作模块 */
     @Excel(name = "操作模块")

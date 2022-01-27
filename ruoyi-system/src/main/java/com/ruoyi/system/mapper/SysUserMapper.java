@@ -52,7 +52,7 @@ public interface SysUserMapper
      * @param userId 用户ID
      * @return 用户对象信息
      */
-    SysUser selectUserById(Long userId);
+    SysUser selectUserById(String userId);
 
     /**
      * 新增用户信息
@@ -94,7 +94,7 @@ public interface SysUserMapper
      * @param userId 用户ID
      * @return 结果
      */
-    int deleteUserById(Long userId);
+    int deleteUserById(String userId);
 
     /**
      * 批量删除用户信息
@@ -102,7 +102,7 @@ public interface SysUserMapper
      * @param userIds 需要删除的用户ID
      * @return 结果
      */
-    int deleteUserByIds(Long[] userIds);
+    int deleteUserByIds(String[] userIds);
 
     /**
      * 校验用户名称是否唯一
@@ -127,4 +127,6 @@ public interface SysUserMapper
      * @return 结果
      */
     SysUser checkEmailUnique(String email);
+
+    int updateUserStatus(SysUser user);
 }

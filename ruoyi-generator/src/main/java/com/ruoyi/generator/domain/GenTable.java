@@ -25,7 +25,7 @@ public class GenTable extends BaseEntity
     /**
      * 编号
      */
-    private Long tableId;
+    private String id;
 
     /**
      * 表名称

@@ -23,12 +23,12 @@ public class SysDept extends BaseEntity
     /**
      * 部门ID
      */
-    private Long deptId;
+    private String id;
 
     /**
      * 父部门ID
      */
-    private Long parentId;
+    private String parentId;
 
     /**
      * 祖级列表
@@ -64,11 +64,6 @@ public class SysDept extends BaseEntity
      * 部门状态:0正常,1停用
      */
     private String status;
-
-    /**
-     * 删除标志（0代表存在 2代表删除）
-     */
-    private String delFlag;
 
     /**
      * 父部门名称

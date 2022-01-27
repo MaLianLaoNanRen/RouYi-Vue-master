@@ -108,7 +108,7 @@
 
     <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="日志编号" align="center" prop="operId" />
+      <el-table-column label="日志编号" align="center" prop="id" />
       <el-table-column label="系统模块" align="center" prop="title" />
       <el-table-column label="操作类型" align="center" prop="businessType">
         <template slot-scope="scope">
@@ -265,7 +265,7 @@ export default {
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.operId)
+      this.ids = selection.map(item => item.id)
       this.multiple = !selection.length
     },
     /** 排序触发事件 */
@@ -281,9 +281,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const operIds = row.operId || this.ids;
-      this.$modal.confirm('是否确认删除日志编号为"' + operIds + '"的数据项？').then(function() {
-        return delOperlog(operIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除日志编号为"' + ids + '"的数据项？').then(function() {
+        return delOperlog(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

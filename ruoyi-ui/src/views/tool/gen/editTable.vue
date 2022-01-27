@@ -158,10 +158,10 @@ export default {
     };
   },
   created() {
-    const tableId = this.$route.query && this.$route.query.tableId;
-    if (tableId) {
+    const id = this.$route.query && this.$route.query.id;
+    if (id) {
       // 获取表详细信息
-      getGenTable(tableId).then(res => {
+      getGenTable(id).then(res => {
         this.columns = res.data.rows;
         this.info = res.data.info;
         this.tables = res.data.tables;
@@ -172,7 +172,7 @@ export default {
       });
       /** 查询菜单下拉列表 */
       getMenuTreeselect().then(response => {
-        this.menus = this.handleTree(response.data, "menuId");
+        this.menus = this.handleTree(response.data);
       });
     }
   },

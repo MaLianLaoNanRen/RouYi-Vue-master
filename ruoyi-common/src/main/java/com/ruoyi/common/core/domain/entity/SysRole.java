@@ -25,8 +25,8 @@ public class SysRole extends BaseEntity
     /**
      * 角色ID
      */
-    @Excel(name = "角色序号", cellType = ColumnType.NUMERIC)
-    private Long roleId;
+    @Excel(name = "角色ID", cellType = ColumnType.STRING)
+    private String id;
 
     /**
      * 角色名称
@@ -74,11 +74,6 @@ public class SysRole extends BaseEntity
     private String status;
 
     /**
-     * 删除标志（0代表存在 2代表删除）
-     */
-    private String delFlag;
-
-    /**
      * 用户是否存在此角色标识 默认不存在
      */
     private boolean flag = false;
@@ -86,25 +81,25 @@ public class SysRole extends BaseEntity
     /**
      * 菜单组
      */
-    private Long[] menuIds;
+    private String[] menuIds;
 
     /**
      * 部门组（数据权限）
      */
-    private Long[] deptIds;
+    private String[] deptIds;
 
-    public SysRole(Long roleId)
+    public SysRole(String roleId)
     {
-        this.roleId = roleId;
+        this.id = roleId;
     }
 
     public boolean isAdmin()
     {
-        return isAdmin(this.roleId);
+        return isAdmin(this.id);
     }
 
-    public static boolean isAdmin(Long roleId)
+    public static boolean isAdmin(String roleId)
     {
-        return roleId != null && 1L == roleId;
+        return "1".equals(roleId);
     }
 }

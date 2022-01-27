@@ -23,7 +23,7 @@ public class SysMenu extends BaseEntity
     /**
      * 菜单ID
      */
-    private Long menuId;
+    private String id;
 
     /**
      * 菜单名称
@@ -40,7 +40,7 @@ public class SysMenu extends BaseEntity
     /**
      * 父菜单ID
      */
-    private Long parentId;
+    private String parentId;
 
     /**
      * 显示顺序

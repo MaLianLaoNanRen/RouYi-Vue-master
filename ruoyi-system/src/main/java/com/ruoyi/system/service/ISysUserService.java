@@ -49,7 +49,7 @@ public interface ISysUserService
      * @param userId 用户ID
      * @return 用户对象信息
      */
-    SysUser selectUserById(Long userId);
+    SysUser selectUserById(String userId);
 
     /**
      * 根据用户ID查询用户所属角色组
@@ -103,7 +103,7 @@ public interface ISysUserService
      *
      * @param userId 用户id
      */
-    void checkUserDataScope(Long userId);
+    void checkUserDataScope(String userId);
 
     /**
      * 新增用户信息
@@ -135,7 +135,7 @@ public interface ISysUserService
      * @param userId  用户ID
      * @param roleIds 角色组
      */
-    void insertUserAuth(Long userId, Long[] roleIds);
+    void insertUserAuth(String userId, String[] roleIds);
 
     /**
      * 修改用户状态
@@ -185,7 +185,7 @@ public interface ISysUserService
      * @param userId 用户ID
      * @return 结果
      */
-    int deleteUserById(Long userId);
+    int deleteUserById(String userId);
 
     /**
      * 批量删除用户信息
@@ -193,7 +193,7 @@ public interface ISysUserService
      * @param userIds 需要删除的用户ID
      * @return 结果
      */
-    int deleteUserByIds(Long[] userIds);
+    int deleteUserByIds(String[] userIds);
 
     /**
      * 导入用户数据

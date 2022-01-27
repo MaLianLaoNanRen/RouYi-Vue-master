@@ -96,7 +96,7 @@ public class SysUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping(value = {"/", "/{userId}"})
-    public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId)
+    public AjaxResult getInfo(@PathVariable(value = "userId", required = false) String userId)
     {
         sysUserService.checkUserDataScope(userId);
         AjaxResult ajax = AjaxResult.success();
@@ -120,6 +120,11 @@ public class SysUserController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user)
     {
+        String password = user.getPassword();
+        if (StringUtils.isEmpty(password))
+        {
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，密码不能为空");
+        }
         if (UserConstants.NOT_UNIQUE.equals(sysUserService.checkUserNameUnique(user.getUserName())))
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
@@ -135,7 +140,7 @@ public class SysUserController extends BaseController
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setCreateBy(getUsername());
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        user.setPassword(SecurityUtils.encryptPassword(password));
         return toAjax(sysUserService.insertUser(user));
     }
 
@@ -168,7 +173,7 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:remove')")
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{userIds}")
-    public AjaxResult remove(@PathVariable Long[] userIds)
+    public AjaxResult remove(@PathVariable String[] userIds)
     {
         if (ArrayUtils.contains(userIds, getUserId()))
         {
@@ -209,7 +214,7 @@ public class SysUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping("/authRole/{userId}")
-    public AjaxResult authRole(@PathVariable("userId") Long userId)
+    public AjaxResult authRole(@PathVariable("userId") String userId)
     {
         AjaxResult ajax = AjaxResult.success();
         SysUser user = sysUserService.selectUserById(userId);
@@ -225,7 +230,7 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.GRANT)
     @PutMapping("/authRole")
-    public AjaxResult insertAuthRole(Long userId, Long[] roleIds)
+    public AjaxResult insertAuthRole(String userId, String[] roleIds)
     {
         sysUserService.insertUserAuth(userId, roleIds);
         return success();

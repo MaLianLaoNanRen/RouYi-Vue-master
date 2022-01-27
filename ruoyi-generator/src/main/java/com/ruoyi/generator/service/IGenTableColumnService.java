@@ -17,7 +17,7 @@ public interface IGenTableColumnService
      * @param tableId 业务字段编号
      * @return 业务字段集合
      */
-    List<GenTableColumn> selectGenTableColumnListByTableId(Long tableId);
+    List<GenTableColumn> selectGenTableColumnListByTableId(String tableId);
 
     /**
      * 新增业务字段

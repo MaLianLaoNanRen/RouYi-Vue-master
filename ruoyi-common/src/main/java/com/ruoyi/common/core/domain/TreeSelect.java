@@ -24,7 +24,7 @@ public class TreeSelect implements Serializable
     /**
      * 节点ID
      */
-    private Long id;
+    private String id;
 
     /**
      * 节点名称
@@ -39,14 +39,14 @@ public class TreeSelect implements Serializable
 
     public TreeSelect(SysDept dept)
     {
-        this.id = dept.getDeptId();
+        this.id = dept.getId();
         this.label = dept.getDeptName();
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public TreeSelect(SysMenu menu)
     {
-        this.id = menu.getMenuId();
+        this.id = menu.getId();
         this.label = menu.getMenuName();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }

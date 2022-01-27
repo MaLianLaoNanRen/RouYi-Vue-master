@@ -28,8 +28,8 @@ public class SysJob extends BaseEntity
     /**
      * 任务ID
      */
-    @Excel(name = "任务序号", cellType = ColumnType.NUMERIC)
-    private Long jobId;
+    @Excel(name = "任务序号", cellType = ColumnType.STRING)
+    private String id;
 
     /**
      * 任务名称

@@ -34,14 +34,14 @@ public interface ISysDictDataService
      * @param dictCode 字典数据ID
      * @return 字典数据
      */
-    SysDictData selectDictDataById(Long dictCode);
+    SysDictData selectDictDataById(String dictCode);
 
     /**
      * 批量删除字典数据信息
      *
      * @param dictCodes 需要删除的字典数据ID
      */
-    void deleteDictDataByIds(Long[] dictCodes);
+    void deleteDictDataByIds(String[] dictCodes);
 
     /**
      * 新增保存字典数据信息

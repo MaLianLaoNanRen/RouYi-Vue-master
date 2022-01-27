@@ -94,7 +94,7 @@
 
     <el-table v-loading="loading" :data="jobList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="任务编号" width="100" align="center" prop="jobId" />
+      <el-table-column label="任务编号" width="100" align="center" prop="id" />
       <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
       <el-table-column label="任务组名" align="center" prop="jobGroup">
         <template slot-scope="scope">
@@ -248,7 +248,7 @@
       <el-form ref="form" :model="form" label-width="120px" size="mini">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="任务编号：">{{ form.jobId }}</el-form-item>
+            <el-form-item label="任务编号：">{{ form.id }}</el-form-item>
             <el-form-item label="任务名称：">{{ form.jobName }}</el-form-item>
           </el-col>
           <el-col :span="12">
@@ -376,7 +376,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        jobId: undefined,
+        id: undefined,
         jobName: undefined,
         jobGroup: undefined,
         invokeTarget: undefined,
@@ -399,7 +399,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.jobId);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -423,7 +423,7 @@ export default {
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
       this.$modal.confirm('确认要"' + text + '""' + row.jobName + '"任务吗？').then(function() {
-        return changeJobStatus(row.jobId, row.status);
+        return changeJobStatus(row.id, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function() {
@@ -433,14 +433,14 @@ export default {
     /* 立即执行一次 */
     handleRun(row) {
       this.$modal.confirm('确认要立即执行一次"' + row.jobName + '"任务吗？').then(function() {
-        return runJob(row.jobId, row.jobGroup);
+        return runJob(row.id, row.jobGroup);
       }).then(() => {
         this.$modal.msgSuccess("执行成功");
       }).catch(() => {});
     },
     /** 任务详细信息 */
     handleView(row) {
-      getJob(row.jobId).then(response => {
+      getJob(row.id).then(response => {
         this.form = response.data;
         this.openView = true;
       });
@@ -456,8 +456,8 @@ export default {
     },
     /** 任务日志列表查询 */
     handleJobLog(row) {
-      const jobId = row.jobId || 0;
-      this.$router.push({ path: '/monitor/job-log/index', query: { jobId: jobId } })
+      const id = row.id || 0;
+      this.$router.push({ path: '/monitor/job-log/index', query: { id: id } })
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -468,8 +468,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const jobId = row.jobId || this.ids;
-      getJob(jobId).then(response => {
+      const id = row.id || this.ids;
+      getJob(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改任务";
@@ -479,7 +479,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.jobId != undefined) {
+          if (this.form.id != undefined) {
             updateJob(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -497,9 +497,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const jobIds = row.jobId || this.ids;
-      this.$modal.confirm('是否确认删除定时任务编号为"' + jobIds + '"的数据项？').then(function() {
-        return delJob(jobIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除定时任务编号为"' + ids + '"的数据项？').then(function() {
+        return delJob(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

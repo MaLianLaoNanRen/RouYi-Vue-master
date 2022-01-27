@@ -34,7 +34,7 @@ public interface SysLogininforMapper
      * @param infoIds 需要删除的登录日志ID
      * @return 结果
      */
-    int deleteLogininforByIds(Long[] infoIds);
+    int deleteLogininforByIds(String[] infoIds);
 
     /**
      * 清空系统登录日志

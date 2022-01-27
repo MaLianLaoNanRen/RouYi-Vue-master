@@ -37,7 +37,7 @@ public class ScheduleUtils
     /**
      * 构建任务触发对象
      */
-    public static TriggerKey getTriggerKey(Long jobId, String jobGroup)
+    public static TriggerKey getTriggerKey(String jobId, String jobGroup)
     {
         return TriggerKey.triggerKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup);
     }
@@ -45,7 +45,7 @@ public class ScheduleUtils
     /**
      * 构建任务键对象
      */
-    public static JobKey getJobKey(Long jobId, String jobGroup)
+    public static JobKey getJobKey(String jobId, String jobGroup)
     {
         return JobKey.jobKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup);
     }
@@ -57,7 +57,7 @@ public class ScheduleUtils
     {
         Class<? extends Job> jobClass = getQuartzJobClass(job);
         // 构建job信息
-        Long jobId = job.getJobId();
+        String jobId = job.getId();
         String jobGroup = job.getJobGroup();
         JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(getJobKey(jobId, jobGroup)).build();
 

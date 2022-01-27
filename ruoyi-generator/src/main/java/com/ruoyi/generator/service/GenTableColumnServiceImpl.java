@@ -26,7 +26,7 @@ public class GenTableColumnServiceImpl implements IGenTableColumnService
      * @return 业务字段集合
      */
     @Override
-    public List<GenTableColumn> selectGenTableColumnListByTableId(Long tableId)
+    public List<GenTableColumn> selectGenTableColumnListByTableId(String tableId)
     {
         return genTableColumnMapper.selectGenTableColumnListByTableId(tableId);
     }
@@ -64,6 +64,6 @@ public class GenTableColumnServiceImpl implements IGenTableColumnService
     @Override
     public int deleteGenTableColumnByIds(String ids)
     {
-        return genTableColumnMapper.deleteGenTableColumnByIds(Convert.toLongArray(ids));
+        return genTableColumnMapper.deleteGenTableColumnByIds(ids.split(","));
     }
 }

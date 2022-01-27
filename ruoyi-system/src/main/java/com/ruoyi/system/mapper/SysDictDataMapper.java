@@ -45,7 +45,7 @@ public interface SysDictDataMapper
      * @param dictCode 字典数据ID
      * @return 字典数据
      */
-    SysDictData selectDictDataById(Long dictCode);
+    SysDictData selectDictDataById(String dictCode);
 
     /**
      * 查询字典数据
@@ -61,7 +61,7 @@ public interface SysDictDataMapper
      * @param dictCode 字典数据ID
      * @return 结果
      */
-    int deleteDictDataById(Long dictCode);
+    int deleteDictDataById(String dictCode);
 
     /**
      * 批量删除字典数据信息
@@ -69,7 +69,7 @@ public interface SysDictDataMapper
      * @param dictCodes 需要删除的字典数据ID
      * @return 结果
      */
-    int deleteDictDataByIds(Long[] dictCodes);
+    int deleteDictDataByIds(String[] dictCodes);
 
     /**
      * 新增字典数据信息

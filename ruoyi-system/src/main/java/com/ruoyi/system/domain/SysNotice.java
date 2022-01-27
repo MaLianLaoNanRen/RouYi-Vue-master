@@ -5,8 +5,6 @@ import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.xss.Xss;
 
@@ -22,7 +20,7 @@ public class SysNotice extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 公告ID */
-    private Long noticeId;
+    private String id;
 
     /** 公告标题 */
     @Xss(message = "公告标题不能包含脚本字符")

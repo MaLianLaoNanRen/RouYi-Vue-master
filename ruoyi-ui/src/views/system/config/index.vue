@@ -107,7 +107,7 @@
 
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="参数主键" align="center" prop="configId" />
+      <el-table-column label="参数主键" align="center" prop="id" />
       <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true" />
       <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true" />
       <el-table-column label="参数键值" align="center" prop="configValue" />
@@ -257,7 +257,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        configId: undefined,
+        id: undefined,
         configName: undefined,
         configKey: undefined,
         configValue: undefined,
@@ -285,15 +285,15 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.configId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const configId = row.configId || this.ids
-      getConfig(configId).then(response => {
+      const id = row.id || this.ids
+      getConfig(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改参数";
@@ -303,7 +303,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.configId != undefined) {
+          if (this.form.id != undefined) {
             updateConfig(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -321,9 +321,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const configIds = row.configId || this.ids;
-      this.$modal.confirm('是否确认删除参数编号为"' + configIds + '"的数据项？').then(function() {
-          return delConfig(configIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除参数编号为"' + ids + '"的数据项？').then(function() {
+          return delConfig(ids);
         }).then(() => {
           this.getList();
           this.$modal.msgSuccess("删除成功");

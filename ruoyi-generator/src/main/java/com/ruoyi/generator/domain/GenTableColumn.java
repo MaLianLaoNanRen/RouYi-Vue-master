@@ -21,12 +21,12 @@ public class GenTableColumn extends BaseEntity
     /**
      * 编号
      */
-    private Long columnId;
+    private String id;
 
     /**
      * 归属表编号
      */
-    private Long tableId;
+    private String tableId;
 
     /**
      * 列名称

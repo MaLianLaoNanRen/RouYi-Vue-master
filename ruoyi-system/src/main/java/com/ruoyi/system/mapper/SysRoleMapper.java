@@ -27,7 +27,7 @@ public interface SysRoleMapper
      * @param userId 用户ID
      * @return 角色列表
      */
-    List<SysRole> selectRolePermissionByUserId(Long userId);
+    List<SysRole> selectRolePermissionByUserId(String userId);
 
     /**
      * 查询所有角色
@@ -42,7 +42,7 @@ public interface SysRoleMapper
      * @param userId 用户ID
      * @return 选中角色ID列表
      */
-    List<Long> selectRoleListByUserId(Long userId);
+    List<String> selectRoleListByUserId(String userId);
 
     /**
      * 通过角色ID查询角色
@@ -50,7 +50,7 @@ public interface SysRoleMapper
      * @param roleId 角色ID
      * @return 角色对象信息
      */
-    SysRole selectRoleById(Long roleId);
+    SysRole selectRoleById(String roleId);
 
     /**
      * 根据用户ID查询角色
@@ -98,7 +98,7 @@ public interface SysRoleMapper
      * @param roleId 角色ID
      * @return 结果
      */
-    int deleteRoleById(Long roleId);
+    int deleteRoleById(String roleId);
 
     /**
      * 批量删除角色信息
@@ -106,5 +106,5 @@ public interface SysRoleMapper
      * @param roleIds 需要删除的角色ID
      * @return 结果
      */
-    int deleteRoleByIds(Long[] roleIds);
+    int deleteRoleByIds(String[] roleIds);
 }

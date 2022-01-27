@@ -21,8 +21,8 @@ public class SysPost extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 岗位序号 */
-    @Excel(name = "岗位序号", cellType = ColumnType.NUMERIC)
-    private Long postId;
+    @Excel(name = "岗位序号", cellType = ColumnType.STRING)
+    private String id;
 
     /** 岗位编码 */
     @Excel(name = "岗位编码")

@@ -140,7 +140,7 @@
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
+          <el-table-column label="用户编号" align="center" key="id" prop="id" v-if="columns[0].visible" width="270" />
           <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
           <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
           <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
@@ -166,7 +166,7 @@
             width="160"
             class-name="small-padding fixed-width"
           >
-            <template slot-scope="scope" v-if="scope.row.userId !== 1">
+            <template slot-scope="scope" v-if="scope.row.id !== 1">
               <el-button
                 size="mini"
                 type="text"
@@ -235,12 +235,12 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户名称" prop="userName">
+            <el-form-item v-if="form.id == undefined" label="用户名称" prop="userName">
               <el-input v-model="form.userName" placeholder="请输入用户名称" maxlength="30" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户密码" prop="password">
+            <el-form-item v-if="form.id == undefined" label="用户密码" prop="password">
               <el-input v-model="form.password" placeholder="请输入用户密码" type="password" maxlength="20" show-password/>
             </el-form-item>
           </el-col>
@@ -276,9 +276,9 @@
               <el-select v-model="form.postIds" multiple placeholder="请选择">
                 <el-option
                   v-for="item in postOptions"
-                  :key="item.postId"
+                  :key="item.id"
                   :label="item.postName"
-                  :value="item.postId"
+                  :value="item.id"
                   :disabled="item.status == 1"
                 ></el-option>
               </el-select>
@@ -289,9 +289,9 @@
               <el-select v-model="form.roleIds" multiple placeholder="请选择">
                 <el-option
                   v-for="item in roleOptions"
-                  :key="item.roleId"
+                  :key="item.id"
                   :label="item.roleName"
-                  :value="item.roleId"
+                  :value="item.id"
                   :disabled="item.status == 1"
                 ></el-option>
               </el-select>
@@ -501,7 +501,7 @@ export default {
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
       this.$modal.confirm('确认要"' + text + '""' + row.userName + '"用户吗？').then(function() {
-        return changeUserStatus(row.userId, row.status);
+        return changeUserStatus(row.id, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function() {
@@ -516,7 +516,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        userId: undefined,
+        id: undefined,
         deptId: undefined,
         userName: undefined,
         nickName: undefined,
@@ -544,7 +544,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.userId);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -577,8 +577,8 @@ export default {
     handleUpdate(row) {
       this.reset();
       this.getTreeselect();
-      const userId = row.userId || this.ids;
-      getUser(userId).then(response => {
+      const id = row.id || this.ids;
+      getUser(id).then(response => {
         this.form = response.data;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
@@ -598,21 +598,21 @@ export default {
         inputPattern: /^.{5,20}$/,
         inputErrorMessage: "用户密码长度必须介于 5 和 20 之间"
       }).then(({ value }) => {
-          resetUserPwd(row.userId, value).then(response => {
+          resetUserPwd(row.id, value).then(response => {
             this.$modal.msgSuccess("修改成功，新密码是：" + value);
           });
         }).catch(() => {});
     },
     /** 分配角色操作 */
     handleAuthRole: function(row) {
-      const userId = row.userId;
-      this.$router.push("/system/user-auth/role/" + userId);
+      const id = row.id;
+      this.$router.push("/system/user-auth/role/" + id);
     },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.userId != undefined) {
+          if (this.form.id != undefined) {
             updateUser(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -630,9 +630,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
-        return delUser(userIds);
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除用户编号为"' + ids + '"的数据项？').then(function() {
+        return delUser(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

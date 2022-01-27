@@ -29,47 +29,47 @@ public interface SysDeptMapper
      * @param deptCheckStrictly 部门树选择项是否关联显示
      * @return 选中部门列表
      */
-    List<Long> selectDeptListByRoleId(@Param("roleId") Long roleId, @Param("deptCheckStrictly") boolean deptCheckStrictly);
+    List<String> selectDeptListByRoleId(@Param("roleId") String roleId, @Param("deptCheckStrictly") boolean deptCheckStrictly);
 
     /**
      * 根据部门ID查询信息
      *
-     * @param deptId 部门ID
+     * @param id 部门ID
      * @return 部门信息
      */
-    SysDept selectDeptById(Long deptId);
+    SysDept selectDeptById(String id);
 
     /**
      * 根据ID查询所有子部门
      *
-     * @param deptId 部门ID
+     * @param id 部门ID
      * @return 部门列表
      */
-    List<SysDept> selectChildrenDeptById(Long deptId);
+    List<SysDept> selectChildrenDeptById(String id);
 
     /**
      * 根据ID查询所有子部门（正常状态）
      *
-     * @param deptId 部门ID
+     * @param id 部门ID
      * @return 子部门数
      */
-    int selectNormalChildrenDeptById(Long deptId);
+    int selectNormalChildrenDeptById(String id);
 
     /**
      * 是否存在子节点
      *
-     * @param deptId 部门ID
+     * @param id 部门ID
      * @return 结果
      */
-    int hasChildByDeptId(Long deptId);
+    int hasChildByDeptId(String id);
 
     /**
      * 查询部门是否存在用户
      *
-     * @param deptId 部门ID
+     * @param id 部门ID
      * @return 结果
      */
-    int checkDeptExistUser(Long deptId);
+    int checkDeptExistUser(String id);
 
     /**
      * 校验部门名称是否唯一
@@ -78,7 +78,7 @@ public interface SysDeptMapper
      * @param parentId 父部门ID
      * @return 结果
      */
-    SysDept checkDeptNameUnique(@Param("deptName") String deptName, @Param("parentId") Long parentId);
+    SysDept checkDeptNameUnique(@Param("deptName") String deptName, @Param("parentId") String parentId);
 
     /**
      * 新增部门信息
@@ -99,9 +99,9 @@ public interface SysDeptMapper
     /**
      * 修改所在部门正常状态
      *
-     * @param deptIds 部门ID组
+     * @param ids 部门ID组
      */
-    void updateDeptStatusNormal(Long[] deptIds);
+    void updateDeptStatusNormal(String[] ids);
 
     /**
      * 修改子元素关系
@@ -114,8 +114,8 @@ public interface SysDeptMapper
     /**
      * 删除部门管理信息
      *
-     * @param deptId 部门ID
+     * @param id 部门ID
      * @return 结果
      */
-    int deleteDeptById(Long deptId);
+    int deleteDeptById(String id);
 }

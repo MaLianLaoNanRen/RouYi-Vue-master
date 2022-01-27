@@ -43,7 +43,7 @@ public class SysMenuController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:menu:query')")
     @GetMapping(value = "/{menuId}")
-    public AjaxResult getInfo(@PathVariable Long menuId)
+    public AjaxResult getInfo(@PathVariable String menuId)
     {
         return AjaxResult.success(sysMenuService.selectMenuById(menuId));
     }
@@ -62,7 +62,7 @@ public class SysMenuController extends BaseController
      * 加载对应角色菜单列表树
      */
     @GetMapping(value = "/roleMenuTreeselect/{roleId}")
-    public AjaxResult roleMenuTreeselect(@PathVariable("roleId") Long roleId)
+    public AjaxResult roleMenuTreeselect(@PathVariable("roleId") String roleId)
     {
         List<SysMenu> menus = sysMenuService.selectMenuList(getUserId());
         AjaxResult ajax = AjaxResult.success();
@@ -107,7 +107,7 @@ public class SysMenuController extends BaseController
         {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
         }
-        else if (menu.getMenuId().equals(menu.getParentId()))
+        else if (menu.getId().equals(menu.getParentId()))
         {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，上级菜单不能选择自己");
         }
@@ -121,7 +121,7 @@ public class SysMenuController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:menu:remove')")
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{menuId}")
-    public AjaxResult remove(@PathVariable("menuId") Long menuId)
+    public AjaxResult remove(@PathVariable("menuId") String menuId)
     {
         if (sysMenuService.hasChildByMenuId(menuId))
         {

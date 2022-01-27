@@ -34,7 +34,7 @@ public interface SysOperLogMapper
      * @param operIds 需要删除的操作日志ID
      * @return 结果
      */
-    int deleteOperLogByIds(Long[] operIds);
+    int deleteOperLogByIds(String[] operIds);
 
     /**
      * 查询操作日志详细
@@ -42,7 +42,7 @@ public interface SysOperLogMapper
      * @param operId 操作ID
      * @return 操作日志对象
      */
-    SysOperLog selectOperLogById(Long operId);
+    SysOperLog selectOperLogById(String operId);
 
     /**
      * 清空操作日志

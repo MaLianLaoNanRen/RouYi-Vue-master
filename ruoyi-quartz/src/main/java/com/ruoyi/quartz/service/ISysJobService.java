@@ -27,7 +27,7 @@ public interface ISysJobService
      * @param jobId 调度任务ID
      * @return 调度任务对象信息
      */
-    SysJob selectJobById(Long jobId);
+    SysJob selectJobById(String jobId);
 
     /**
      * 暂停任务
@@ -58,7 +58,7 @@ public interface ISysJobService
      *
      * @param jobIds 需要删除的任务ID
      */
-    void deleteJobByIds(Long[] jobIds) throws SchedulerException;
+    void deleteJobByIds(String[] jobIds) throws SchedulerException;
 
     /**
      * 任务调度状态修改

@@ -19,7 +19,7 @@ public interface SysRoleMenuMapper
      * @param menuId 菜单ID
      * @return 结果
      */
-    int checkMenuExistRole(Long menuId);
+    int checkMenuExistRole(String menuId);
 
     /**
      * 通过角色ID删除角色和菜单关联
@@ -27,7 +27,7 @@ public interface SysRoleMenuMapper
      * @param roleId 角色ID
      * @return 结果
      */
-    int deleteRoleMenuByRoleId(Long roleId);
+    int deleteRoleMenuByRoleId(String roleId);
 
     /**
      * 批量删除角色菜单关联信息
@@ -35,7 +35,7 @@ public interface SysRoleMenuMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    int deleteRoleMenu(Long[] ids);
+    int deleteRoleMenu(String[] ids);
 
     /**
      * 批量新增角色菜单信息
