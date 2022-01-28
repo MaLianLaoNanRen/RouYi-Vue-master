@@ -104,6 +104,7 @@
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
         </where>
+        order by u.create_time desc
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
