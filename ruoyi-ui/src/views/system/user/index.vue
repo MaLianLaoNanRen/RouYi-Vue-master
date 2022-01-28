@@ -264,6 +264,7 @@
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
+                  :disabled="dict.raw.status == 1"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -275,6 +276,7 @@
                   v-for="dict in dict.type.sys_normal_disable"
                   :key="dict.value"
                   :label="dict.value"
+                  :disabled="dict.raw.status == 1"
                 >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
