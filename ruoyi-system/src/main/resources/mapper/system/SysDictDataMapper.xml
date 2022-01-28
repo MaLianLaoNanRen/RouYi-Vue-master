@@ -54,7 +54,7 @@
 
     <select id="selectDictDataByType" parameterType="SysDictData" resultMap="SysDictDataResult">
         <include refid="selectDictDataVo"/>
-        where status = '0' and dict_type = #{dictType} order by dict_sort asc
+        where dict_type = #{dictType} order by dict_sort asc
     </select>
 
     <select id="selectDictLabel" resultType="String">
