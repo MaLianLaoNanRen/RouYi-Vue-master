@@ -55,7 +55,7 @@ CREATE TABLE sys_user
     user_type   VARCHAR(2)           DEFAULT '00' COMMENT '用户类型（00系统用户）',
     email       VARCHAR(50)          DEFAULT NULL COMMENT '用户邮箱',
     phonenumber VARCHAR(11)          DEFAULT NULL COMMENT '手机号码',
-    sex         CHAR(1)              DEFAULT '0' COMMENT '用户性别（0男 1女 2未知）',
+    sex         CHAR(1)              DEFAULT '0' COMMENT '用户性别（0未知 1男 2女）',
     avatar      VARCHAR(100)         DEFAULT NULL COMMENT '头像地址',
     password    VARCHAR(100)         DEFAULT NULL COMMENT '密码',
     status      CHAR(1)              DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
@@ -74,7 +74,7 @@ CREATE TABLE sys_user
 -- 初始化-用户信息表数据
 -- ----------------------------
 insert into sys_user values('1',  @deptId03, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$nYVATlkU9iWIYuvVy6a1d.C2DXkGrTxPs7uy1bZf4ArrN5Y3e85QG', '0', null, null, 'root', sysdate(), null, null, '管理员');
-insert into sys_user values('2',  @deptId04, 'ry',    '若依', '00', 'ry@qq.com',  '15666666666', '1', '', '$2a$10$nYVATlkU9iWIYuvVy6a1d.C2DXkGrTxPs7uy1bZf4ArrN5Y3e85QG', '0', null, null, 'root', sysdate(), null, null, '测试员');
+insert into sys_user values('2',  @deptId04, 'ry',    '若依', '00', 'ry@qq.com',  '15666666666', '2', '', '$2a$10$nYVATlkU9iWIYuvVy6a1d.C2DXkGrTxPs7uy1bZf4ArrN5Y3e85QG', '0', null, null, 'root', sysdate(), null, null, '测试员');
 
 -- ----------------------------
 -- 3、岗位信息表
@@ -597,9 +597,9 @@ CREATE TABLE sys_dict_data
 ) ENGINE = innodb
   AUTO_INCREMENT = 100 COMMENT = '字典数据表';
 
-insert into sys_dict_data values(replace(uuid(), '-', ''), 1,  '男',       '0',      'sys_user_sex',        null,   null,      'Y', '0', 'root', sysdate(), null, null, '性别男');
-insert into sys_dict_data values(replace(uuid(), '-', ''), 2,  '女',       '1',      'sys_user_sex',        null,   null,      'N', '0', 'root', sysdate(), null, null, '性别女');
-insert into sys_dict_data values(replace(uuid(), '-', ''), 3,  '未知',     '2',      'sys_user_sex',        null,   null,      'N', '0', 'root', sysdate(), null, null, '性别未知');
+insert into sys_dict_data values(replace(uuid(), '-', ''), 1,  '未知',     '0',      'sys_user_sex',        null,   null,      'Y', '0', 'root', sysdate(), null, null, '性别男');
+insert into sys_dict_data values(replace(uuid(), '-', ''), 2,  '男',       '1',      'sys_user_sex',        null,   null,      'N', '0', 'root', sysdate(), null, null, '性别女');
+insert into sys_dict_data values(replace(uuid(), '-', ''), 3,  '女',       '2',      'sys_user_sex',        null,   null,      'N', '0', 'root', sysdate(), null, null, '性别未知');
 insert into sys_dict_data values(replace(uuid(), '-', ''), 1,  '显示',     '0',      'sys_show_hide',       null,   'primary', 'Y', '0', 'root', sysdate(), null, null, '显示菜单');
 insert into sys_dict_data values(replace(uuid(), '-', ''), 2,  '隐藏',     '1',      'sys_show_hide',       null,   'danger',  'N', '0', 'root', sysdate(), null, null, '隐藏菜单');
 insert into sys_dict_data values(replace(uuid(), '-', ''), 1,  '正常',     '0',      'sys_normal_disable',  null,   'primary', 'Y', '0', 'root', sysdate(), null, null, '正常状态');
