@@ -816,3 +816,30 @@ CREATE TABLE gen_table_column
     PRIMARY KEY (id)
 ) ENGINE = innodb
   AUTO_INCREMENT = 1 COMMENT = '代码生成业务表字段';
+
+
+-- ----------------------------
+-- 20、App用户信息表
+-- ----------------------------
+DROP TABLE IF EXISTS app_user;
+
+CREATE TABLE `app_user` (
+    `id` varchar(32) NOT NULL COMMENT '用户ID',
+    `nick_name` varchar(30) DEFAULT NULL COMMENT '用户昵称',
+    `email` varchar(50) DEFAULT NULL COMMENT '用户邮箱',
+    `tel` varchar(11) NOT NULL COMMENT '手机号码',
+    `card_id` varchar(50) DEFAULT NULL COMMENT '证件号码',
+    `sex` char(1) DEFAULT '0' COMMENT '用户性别（0未知 1男 2女）',
+    `avatar` varchar(100) DEFAULT NULL COMMENT '头像地址',
+    `password` varchar(100) DEFAULT NULL COMMENT '密码',
+    `status` char(1) DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
+    `login_ip` varchar(128) DEFAULT NULL COMMENT '最后登录IP',
+    `login_date` datetime DEFAULT NULL COMMENT '最后登录时间',
+    `create_by` varchar(32) DEFAULT NULL COMMENT '创建者',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(32) DEFAULT NULL COMMENT '更新者',
+    `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `idx_app_user_tel` (`tel`) USING BTREE COMMENT '手机号码唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='App用户信息表';
